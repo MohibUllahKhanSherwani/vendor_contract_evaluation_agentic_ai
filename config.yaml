@@ -1,33 +1,19 @@
-llm:
-  provider: gemini  # Active provider: gemini, ollama, or azure
-  
-  # Google Gemini configuration
-  gemini:
-    model: gemini-2.5-flash
-    api_key: ""  # Use GEMINI_API_KEY env var for security
-    temperature: 0.3
-    max_tokens: 4096
-  
-  # Ollama configuration (for easy switching)
-  ollama:
-    model: llama3.2:1b
-    base_url: http://localhost:11434
-    temperature: 0.1
-    max_tokens: 1024
-  
-  # Azure OpenAI configuration (for easy switching)
-  azure:
-    endpoint: "any_sample_endpoint"
-    deployment: gpt-4o
-    temperature: 0.0
-    max_tokens: 512
+Root:
+  app_name: DaleelPetroAgent
 
-data:
-  sample_folder: data/samples
-  evaluation_file: data/evaluations.csv
-  audit_log_file: data/audit_logs.jsonl
+ConversationConfig:
+  conversational_history_db: data/conversations.db
 
-agents:
-  max_retries: 3
-  timeout_seconds: 30
-  confidence_threshold: 0.6
+ContentConfig:
+  max_output_tokens: 4096
+  temperature: 0.3
+  thinking:
+    max_output_tokens: 1024
+    include_thoughts: false
+
+LLmConfig:
+  model_name: gemini-2.5-flash
+  description: Daleel Petroleum Contract Evaluation Agent
+
+SessionConfig:
+  max_messages: 20
