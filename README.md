@@ -3,89 +3,60 @@
 [![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)]()
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688.svg)]()
+[![Google ADK](https://img.shields.io/badge/ADK-Google_Agent_Kit-4285F4.svg)]()
 [![React](https://img.shields.io/badge/Frontend-React_Vite-61DAFB.svg)]()
-[![License](https://img.shields.io/badge/License-Proprietary-red.svg)]()
 
-An advanced **Agentic AI** platform designed to automate and deepen contract performance evaluation. Moving beyond simple data visualization, this system functions as an **Autonomous Contracts Agent**, utilizing Large Language Models (LLMs) to reason through complex, multi-source data to provide executive-level insights and audit-ready recommendations.
-
----
-
-## 🌟 Executive Summary
-
-The **Intelligence Hub** is a next-generation vendor management system that scales the expertise of a Senior Contracts Specialist. It doesn't just show you metrics; it understands the "Why" behind them. By synthesizing quantitative performance data with qualitative human feedback and market context, the system provides a comprehensive **Logic Pathway** for every contract decision—functioning effectively as a 24/7 digital auditor.
+An advanced **Agentic AI** platform designed using the **Google Agent Development Kit (ADK)** to automate and deepen contract performance evaluation. Moving beyond simple data visualization, this system functions as an **Autonomous Contracts Agent**, utilizing a multi-agent swarm to reason through complex data for executive-level, audit-ready recommendations.
 
 ---
 
-## 🎯 The Use Case: Why Agentic AI?
+## 🏗️ System Architecture (Google ADK Core)
 
-### The Challenge: The "Manual Evaluation" Trap
-Contract evaluation is traditionally a highly inefficient and high-friction process:
-*   **Exhausting & Repetitive**: Senior specialists waste hundreds of hours manually cross-referencing CSV logs, PDF contracts, and email chains.
-*   **Subjective & Inconsistent**: Evaluations often depend on *who* is reviewing the file, leading to variable standards and biased outcomes.
-*   **Reactive Blind Spots**: Human evaluators often miss subtle patterns or "slow leaks" in performance until they become critical failures.
-*   **Audit Gaps**: Decisions are made in meetings with no clear, data-backed evidence trail preserved for future audits.
-
-### The Solution: The "Agentic" Advantage
-Why move beyond simple automation? Traditional scripts can calculate uptime, but they cannot *think*. Our Agentic AI mirrors the behavior of a human specialist:
-
-| Feature | Traditional Automation 🤖 | Agentic AI (Intelligence Hub) 🧠 |
-| :--- | :--- | :--- |
-| **Logic Model** | Rigid `if/then` scripts | **Reasoning Engines** (LLMs) that understand nuance |
-| **Data Scope** | Structured DBs only | **Multi-Modal**: Reads CSVs, JSON logs, & human Feedback |
-| **Conflict Resolution** | Flags errors blindly | **Investigates Context**: "Was this a vendor failure or a market issue?" |
-| **Output** | Static Dashboards | **Strategic Decisions**: "Renew with conditions" vs "Terminate" |
-| **Auditability** | Black-box calculations | **Explainable AI**: Citations for every single claim |
-
-### Standardization & Fairness
-By replacing subjective human reviews with this Agentic framework, you ensure:
-*   **Zero Bias**: Every vendor is judged by the exact same rigorous standards.
-*   **Instant Audits**: Decisions are backed by a transparent "Logic Pathway," citing specific data points (e.g., *"Score dropped 15% in Q3 due to incident #402"*).
-
----
-
-## 🏗️ System Architecture
-
-The system follows a multi-agent orchestration pattern to ensure specialized handling of different data types before synthesizing a final verdict.
+The system leverages the **Google ADK** for sophisticated agent orchestration, stateful session management, and robust multi-agent coordination.
 
 ```mermaid
 graph TD
-    subgraph Data_Sources [Ingestion Layer]
-        A[Performance Metrics .csv] -->|Raw Data| I[Data Ingestion Module]
-        B[Incident Logs .json] -->|Events| I
-        C[Human Reviews .md] -->|Sentiment| I
-        D[Market Context .txt] -->|Benchmarks| I
+    subgraph Data_Layer [Data Ingestion]
+        P_Data[Perf .csv] -->|Load| E[Executor]
+        I_Data[Incidents .json] -->|Load| E
+        R_Data[Reviews .md] -->|Load| E
     end
 
-    subgraph Agent_Swarm [Agentic Core]
-        I --> P[Performance Agent]
-        I --> R[Risk Agent]
-        I --> M[Market Analyst]
+    subgraph ADK_Core [Google ADK Core]
+        E -->|Init| R[ADK Runner]
+        R -->|State| S[DatabaseSessionService]
         
-        P -->|KPI Scores| O[Orchestrator]
-        R -->|Risk Profile| O
-        M -->|Industry Context| O
+        subgraph Agent_Swarm [Agentic Swarm]
+            A1[Performance Agent]
+            A2[Risk Agent]
+            A3[Reasoning Agent]
+        end
+        
+        R --> A1 --> R
+        R --> A2 --> R
+        R --> A3 --> R
     end
 
-    subgraph Reasoning_Engine [Synthesis & Output]
-        O -->|Aggregated Context| L[LLM Reasoning Core]
-        L -->|Logic Pathway| D[Decision Engine]
-        D -->|Final Verdict| V[Executive Dashboard]
+    subgraph Decision_Engine [Logic & Output]
+        R -->|Synthesis| D[Deterministic Rules]
+        D -->|Verdict| UI[Executive Dashboard]
     end
 
-    style Data_Sources fill:#f9f9f9,stroke:#333,stroke-width:2px
-    style Agent_Swarm fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style Reasoning_Engine fill:#fff3e0,stroke:#ff6f00,stroke-width:2px
+    style Data_Layer fill:#f9f9f9,stroke:#333
+    style ADK_Core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style Decision_Engine fill:#fff3e0,stroke:#ff6f00
 ```
 
 ---
 
-## 🚀 Key Features
+## 🌟 Key Features
 
-*   **Autonomous Audit Logic**: Real-time LLM reasoning triggered instantly upon vendor selection.
-*   **Explainable AI (XAI)**: A transparent 5-step "Logic Pathway" revealing the Agent's specific reasoning process.
-*   **Multi-Modal Synthesis**: Combines structured data (Excel/CSV) with unstructured text (Reviews/Incidents) for a holistic view.
-*   **Surgical Extraction**: Advanced JSON engines ensure high-fidelity reporting even with massive data payloads.
-*   **Executive Dashboard**: A premium, high-contrast React interface designed for C-level rapid decision-making.
+*   **Google ADK Orchestration**: Uses the `Runner` and `LlmAgent` patterns for enterprise-grade AI execution.
+*   **Multi-Agent Swarm**: Specialized agents for Performance Analysis, Risk Assessment, and Final Strategic Reasoning.
+*   **Explainable AI (XAI)**: A transparent 5-step **Logic Pathway** revealing the Agent's specific reasoning process and evidence citations.
+*   **Deterministic Guardrails**: Guarantees decision consistency through a Python-based rule engine (RENEW, MONITOR, RENEGOTIATE, TERMINATE) that prevents LLM hallucination in final labels.
+*   **API Key Rotation**: Automated failover between multiple keys (`GOOGLE_API_KEY_1`, `_2`) to bypass rate-limits.
+*   **Data Residency Compliance**: Strategy for **Oman PDPL** alignment using Azure/Google regional datacenters (e.g., UAE North).
 
 ---
 
@@ -93,105 +64,53 @@ graph TD
 
 | Component | Technology | Description |
 | :--- | :--- | :--- |
-| **Backend** | **FastAPI** (Python 3.10+) | High-performance async API for multi-agent orchestration. |
-| **Frontend** | **React** (Vite) | FAST, modern UI with real-time state management. |
-| **Intelligence** | **Google Gemini 2.0 Flash** | Primary reasoning engine (via `google-genai` SDK). |
-| **Fallback** | **Ollama / Azure OpenAI** | Configurable support for local or alternative cloud LLMs. |
-| **Styling** | **Vanilla CSS** | Custom Glassmorphism design system for a premium feel. |
-| **Data** | **CSV / JSON** | Lightweight, persistence-enabled file storage for easy portability. |
+| **Orchestration** | **Google ADK** | The core framework for agent management and session persistence. |
+| **Intelligence** | **Google Gemini 2.5 Flash** | Primary reasoning engine for high-speed, cost-effective audits. |
+| **Backend** | **FastAPI** | High-performance async API Layer. |
+| **Frontend** | **React (Vite)** | Modern, high-contrast C-Level dashboard. |
+| **Database** | **SQLite + AioSqlite** | ADK-managed session history and conversation state. |
 
 ---
 
 ## 🏁 Getting Started
 
-### Prerequisites
-*   **Python**: 3.9 or higher
-*   **Node.js**: 18 or higher
-*   **API Key**: A valid [Google Gemini API Key](https://aistudio.google.com/) (or Azure/Ollama setup).
-
-### 1. Repository Setup
-```powershell
-git clone https://github.com/your-org/daleel-contracts-agent.git
-cd daleel-contracts-agent
+### 1. Configuration (.env)
+The system supports multiple API keys for high availability. Create a `.env` file in the root:
+```env
+GOOGLE_API_KEY_1=your_first_key
+GOOGLE_API_KEY_2=your_second_key
+# The system will automatically rotate if Key 1 hits a 429 Rate Limit.
 ```
 
-### 2. Backend Installation
+### 2. Backend Setup
 ```powershell
-# Create virtual environment
 python -m venv venv
 .\venv\Scripts\Activate.ps1
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Configure Environment
-# Create a .env file in the root directory
-echo "GEMINI_API_KEY=your_actual_api_key_here" > .env
-
-# Start the Agent Service
 python src/app.py
 ```
-*The backend API will start at `http://localhost:8000`*
 
-### 3. Frontend Installation
-Open a new terminal configuration:
+### 3. Frontend Setup
 ```powershell
 cd frontend
 npm install
-
-# Start the Dashboard
 npm run dev
 ```
-*The UI will be available at `http://localhost:3000`*
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ Logic Framework (Decision Boundaries)
 
-The system is highly configurable via `config.yaml`. You can adjust model parameters, thresholds, and providers without touching the code.
+The system enforces the following mandatory recommendation rules based on synthesized scores and risk levels:
 
-```yaml
-llm:
-  provider: gemini  # Options: 'gemini', 'ollama', 'azure'
-  gemini:
-    model: gemini-2.0-flash-exp
-    temperature: 0.3 # Lower for more deterministic/factual audits
-
-agents:
-  max_retries: 3
-  confidence_threshold: 0.6 # Minimum confidence to auto-approve
-```
+| Condition | Recommendation | Description |
+| :--- | :--- | :--- |
+| **Score >= 85 & Risk <= MED** | **RENEW** | Strong performer with manageable risk. |
+| **Score 70-84 & Risk == MED** | **MONITOR** | Decent performance but requires oversight. |
+| **Score < 50 or High Risk/Low Score**| **TERMINATE** | Systematic failure or critical risk exposure. |
+| **All Other Cases** | **RENEGOTIATE** | Performance/terms need formal correction. |
 
 ---
 
-## 🧪 Testing
-
-Run the automated test suite to verify agent logic and API endpoints.
-
-```powershell
-# Run all tests
-pytest
-
-# Run only agent logic tests
-pytest tests/test_agents.py
-```
-
----
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-1.  **"API Key not found" Error**:
-    *   Ensure your `.env` file is in the **root** directory (not in `src`).
-    *   Restart the backend terminal after creating the `.env` file.
-
-2.  **Frontend shows "Network Error"**:
-    *   Verify the backend is running on port `8000`.
-    *   Check if your firewall is blocking local connections.
-
-3.  **LLM Responses are slow**:
-    *   `gemini-2.0-flash` is recommended for speed.
-    *   Check your internet connection strength.
-
----
+## ⚖️ Compliance & Governance
+Designed for the Omani Energy Sector, the **Intelligence Hub** supports strict data handling protocols. Future implementations are geared toward local hosting or **Azure UAE North** to satisfy Oman's **Personal Data Protection Law (PDPL)** regarding data sovereignty.
