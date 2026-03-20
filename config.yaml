@@ -13,6 +13,10 @@ ContentConfig:
 
 LLmConfig:
   model_name: gemini-2.5-flash
+  api_keys: 
+    - GOOGLE_API_KEY
+    - GOOGLE_API_KEY_2
+    - GOOGLE_API_KEY_3
   description: Daleel Petroleum Contract Evaluation Agent
 
 SessionConfig:
