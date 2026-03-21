@@ -1,0 +1,30 @@
+# Oilfield Chemical Supply - Industry Benchmarks (2024)
+
+## Performance Standards
+
+### Delivery Timeline Accuracy (JIT)
+- **Target**: > 96% on-time delivery (OTD)
+- **Industry Average**: 92%
+- **Below Standard**: < 88%
+
+### Product Quality Consistency
+- **Compliance**: 99.5% of batches meeting technical specifications (Batch Concentration, Purity)
+- **Warning Sign**: Returns/Recalls > 2 per year
+
+### Technical Support Response
+- **On-site Engineer Availability**: < 48 hours for problem diagnosis
+- **Lab Analysis Turnaround**: < 5 business days for field samples
+
+## Cost Benchmarks (2024)
+
+### Scale Inhibitor / Emulsifier Sets
+- **Standard Formulations**: $4.50 - $6.50 per liter
+- **Specialized/High Temperature**: $8.00 - $12.00 per liter
+
+## Risk Assessment Context
+
+### High Risk Indicators
+- History of contamination in delivered chemicals
+- Repeated stock-outs (empty tanks) causing production shutdowns
+- Non-compliance with Material Safety Data Sheets (MSDS) regulations
+- Long lead times > 6 weeks for critical production chemicals

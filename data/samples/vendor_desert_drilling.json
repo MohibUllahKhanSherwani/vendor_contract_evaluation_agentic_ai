@@ -1,0 +1,62 @@
+{
+    "contract_id": "CNT-2024-010",
+    "vendor_name": "Desert Drilling Solutions",
+    "vendor_id": "VEN-OG-001",
+    "department": "Drilling",
+    "contract_type": "Rig Operations",
+    "value_usd": 12500000,
+    "kpis": [
+        {
+            "name": "NPT",
+            "target": 8.0,
+            "actual": 22.0,
+            "unit": "percentage",
+            "description": "Non-Productive Time — target max 8%, actual is nearly 3x the threshold"
+        },
+        {
+            "name": "Rig Uptime",
+            "target": 95.0,
+            "actual": 78.0,
+            "unit": "percentage",
+            "description": "Rig availability — significantly below target due to 4 unplanned shutdowns"
+        },
+        {
+            "name": "Wellbore Quality Index",
+            "target": 90.0,
+            "actual": 72.0,
+            "unit": "percentage",
+            "description": "Trajectory compliance — two sidetracks required, one abandoned hole section"
+        },
+        {
+            "name": "LTIR",
+            "target": 0.20,
+            "actual": 0.04,
+            "unit": "rate",
+            "description": "Safety record: Outstanding — zero lost-time incidents across 1.2M manhours"
+        }
+    ],
+    "incidents": [
+        {
+            "id": "INC-010-A",
+            "date": "2024-02-18",
+            "severity": "medium",
+            "description": "Top-drive motor failure on Rig-7 caused 48h unplanned shutdown. Third recurrence of same failure mode.",
+            "resolved": true,
+            "resolution_time_hours": 48
+        },
+        {
+            "id": "INC-010-B",
+            "date": "2024-06-02",
+            "severity": "high",
+            "description": "BOP control system malfunction during well control event. BOP did not close on first command. Backup system activated after 12-minute delay.",
+            "resolved": true,
+            "resolution_time_hours": 72
+        }
+    ],
+    "budget": {
+        "allocated": 12500000,
+        "spent": 13900000,
+        "overrun_percentage": 11.2
+    },
+    "notes": "Desert Drilling's safety record is genuinely exceptional — zero LTIs across 1.2M manhours. However their aging rig fleet is now a serious operational liability. NPT is 3x above target, uptime has dropped to 78%, and they have had a high-severity BOP malfunction. Their day rates are 15% below market average but the cost savings are being consumed by downtime and remedial operations. Equipment replacement is not planned until 2026."
+}

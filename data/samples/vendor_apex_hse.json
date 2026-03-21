@@ -1,0 +1,31 @@
+{
+    "contract_id": "CNT-2024-050",
+    "vendor_name": "Apex HSE Consulting",
+    "vendor_id": "VEN-OG-005",
+    "department": "HSE",
+    "contract_type": "Consulting Support",
+    "value_usd": 850000,
+    "kpis": [
+        {
+            "name": "Audit Accuracy",
+            "target": 95.0,
+            "actual": 98.2,
+            "unit": "percentage",
+            "description": "Best-in-class investigation quality"
+        },
+        {
+            "name": "Reporting Turnaround",
+            "target": 72.0,
+            "actual": 120.0,
+            "unit": "hours",
+            "description": "Consistently late with critical investigations"
+        }
+    ],
+    "incidents": [],
+    "budget": {
+        "allocated": 850000,
+        "spent": 845000,
+        "overrun_percentage": -0.6
+    },
+    "notes": "Their audit team is world-class, but severely understaffed. Excellent data, but it arrives so late it is sometimes unactionable for immediate response."
+}

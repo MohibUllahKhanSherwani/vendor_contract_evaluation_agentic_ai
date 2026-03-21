@@ -1,0 +1,26 @@
+# Logistics & Transport - Industry Benchmarks (2024)
+
+## Performance Standards
+
+### Heavy Equipment Transport
+- **Move Completion Time**: Within 10% of planned schedule
+- **Equipment Availability**: > 95% for scheduled moves
+
+### Cargo Integrity
+- **Damage-Free Delivery**: 99.8%
+- **Industry Average**: 99.3%
+
+### Customs Clearance (Oman/Inbound)
+- **Target**: < 5 business days for standard oilfield equipment
+- **Critical Spares**: < 48 hours
+
+## Cost Benchmarks (2024)
+
+### Trucking Day Rates
+- **Flatbed (Standard)**: $400 - $650
+- **Heavy Lift / Oversized**: $1,200 - $2,000
+
+## HSE & Safety Benchmarks
+- **Road Safety (IVMS)**: Zero Speeding incidents per 100k km
+- **Vehicle Maintenance**: Zero mechanical failures causing delay during transit
+- **Driver Fatigue Monitoring**: Compulsory rest hours compliance > 99%

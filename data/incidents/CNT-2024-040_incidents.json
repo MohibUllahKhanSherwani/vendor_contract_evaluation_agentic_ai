@@ -1,0 +1,35 @@
+[
+    {
+        "incident_id": "INC-OG-004",
+        "date": "2024-02-14",
+        "severity": "high",
+        "title": "Vehicle Rollover (Speeding)",
+        "description": "Flatbed truck carrying $200k in drilling bits rolled over while rounding a sharp curve. Driver was exceeding posted speed limit and fleet speed cap.",
+        "resolution_hours": 120,
+        "root_cause": "Driver error and failure to comply with IVMS speed restrictions",
+        "preventable": true,
+        "vendor_response_quality": "poor",
+        "vendor_actions_taken": "Fired driver but took 4 days to provide a replacement truck for cargo recovery",
+        "business_impact": "High - $50k in equipment damage, 3-day drilling delay",
+        "follow_up_actions": [
+            "Formal safety notice sent to vendor",
+            "Audit requested of all vendor driver logs"
+        ]
+    },
+    {
+        "incident_id": "INC-OG-005",
+        "date": "2024-05-30",
+        "severity": "medium",
+        "title": "Lost Cargo - Spares Depot",
+        "description": "Consignment of 4 pump units was 'mis-located' at the vendor's main distribution hub. Items were missing for 6 days.",
+        "resolution_hours": 168,
+        "root_cause": "Manual inventory error at transit hub",
+        "preventable": true,
+        "vendor_response_quality": "poor",
+        "vendor_actions_taken": "Found cargo after intensive search but offered no explanation for tracking system failure",
+        "business_impact": "Medium - site delay, increased rental costs for temporary pump",
+        "follow_up_actions": [
+            "Penalty clause for lost/delayed cargo invoked"
+        ]
+    }
+]

@@ -1,0 +1,39 @@
+# Drilling & Well Services - Industry Benchmarks (Oman/MENA 2024)
+
+## Performance Standards
+
+### Non-Productive Time (NPT)
+- **Industry Average**: 12% - 15% of total rig operations
+- **Top Tier Providers**: < 8%
+- **Below Standard**: > 18%
+
+**2024 Trend**: NPT has slightly increased due to increased exploration in more complex geological formations and equipment age in some older fleets.
+
+### Rig Uptime & Availability
+- **Industry Average**: 92% - 95% 
+- **Best-in-Class**: > 97%
+- **Concerning Threshold**: < 90%
+
+### Wellbore Quality Index
+- **Target**: > 90% deviation from planned trajectory
+- **Warning Sign**: Multiple sidetracks required due to avoidable drilling issues.
+
+## Cost Benchmarks (2024)
+
+### Rig Day Rates (Onshore)
+- **Standard 1500HP Rig**: $22,000 - $28,000
+- **Advanced Cyber Rigs**: $32,000 - $38,000
+- **Budget/Older Fleets**: $18,000 - $22,000
+
+## HSE & Safety Benchmarks (Drilling)
+- **LTIR Target**: < 0.20 per 200k man-hours
+- **TRIR Target**: < 0.80 per 200k man-hours
+- **Near-Miss Frequency**: High reporting ( > 20 per month) indicates strong safety culture. low reporting ( < 5) is a red flag for hidden risks.
+
+## Risk Assessment Context
+
+### High Risk Indicators
+- NPT consistently > 20%
+- History of well control incidents or near-blowouts
+- Rig uptime < 85%
+- Maintenance backlog > 3 months on critical spares

@@ -1,0 +1,19 @@
+[
+    {
+        "incident_id": "INC-OG-003",
+        "date": "2024-05-18",
+        "severity": "medium",
+        "title": "Batch Contamination",
+        "description": "Scale inhibitor delivery (Batch-12B) was found to have trace levels of cross-contamination from a previous drilling fluid production run.",
+        "resolution_hours": 72,
+        "root_cause": "Inadequate cleaning of transport tank at vendor facility",
+        "preventable": true,
+        "vendor_response_quality": "good",
+        "vendor_actions_taken": "Immediate uplift of contaminated batch, free replacement within 72 hours, updated tank cleaning QA protocols",
+        "business_impact": "Medium - 48h production delay for the Affected Wells",
+        "follow_up_actions": [
+            "Mandatory independent QA check on first 3 lots of next supply",
+            "Daleel to perform vendor facility audit in Q3"
+        ]
+    }
+]

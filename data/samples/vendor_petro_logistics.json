@@ -1,0 +1,62 @@
+{
+    "contract_id": "CNT-2024-040",
+    "vendor_name": "PetroLogistics ME",
+    "vendor_id": "VEN-OG-004",
+    "department": "Logistics",
+    "contract_type": "Logistics Framework",
+    "value_usd": 2800000,
+    "kpis": [
+        {
+            "name": "Equipment Move Volume",
+            "target": 95.0,
+            "actual": 96.5,
+            "unit": "percentage",
+            "description": "Volume of scheduled equipment moves completed on time — strong"
+        },
+        {
+            "name": "IVMS Speed Compliance",
+            "target": 100.0,
+            "actual": 71.0,
+            "unit": "percentage",
+            "description": "In-Vehicle Monitoring speed policy compliance — critically failing (29% of trips show violations)"
+        },
+        {
+            "name": "Cargo Damage Rate",
+            "target": 0.2,
+            "actual": 2.8,
+            "unit": "percentage",
+            "description": "Percentage of moves resulting in cargo damage — 14x above target"
+        },
+        {
+            "name": "Incident Rate",
+            "target": 0.0,
+            "actual": 2.0,
+            "unit": "count",
+            "description": "Number of HSE incidents this period (target zero) — 2 serious incidents YTD"
+        }
+    ],
+    "incidents": [
+        {
+            "id": "INC-040-S",
+            "date": "2024-02-14",
+            "severity": "high",
+            "description": "Flatbed truck rollover on Nizwa highway. Driver was exceeding speed limit. $50k equipment damage. No fatalities.",
+            "resolved": true,
+            "resolution_time_hours": 96
+        },
+        {
+            "id": "INC-040-B",
+            "date": "2024-05-30",
+            "severity": "medium",
+            "description": "Lost cargo: 4 pump units missing from transit hub for 6 days. Root cause: manual inventory error.",
+            "resolved": true,
+            "resolution_time_hours": 168
+        }
+    ],
+    "budget": {
+        "allocated": 2800000,
+        "spent": 2800000,
+        "overrun_percentage": 0.0
+    },
+    "notes": "PetroLogistics ME has the largest heavy-lift fleet in the region and is the ONLY vendor with capacity to execute Daleel's 2025 North-Field expansion rig moves. Their equipment scheduling is very reliable (96.5% volume). However their safety culture is a documented failure: 71% IVMS compliance, 1 vehicle rollover, and a cargo damage rate 14x above target. Retention is a direct safety liability."
+}

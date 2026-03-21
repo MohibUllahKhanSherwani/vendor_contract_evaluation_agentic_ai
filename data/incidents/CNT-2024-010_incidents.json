@@ -1,0 +1,19 @@
+[
+    {
+        "incident_id": "INC-OG-001",
+        "date": "2024-04-12",
+        "severity": "high",
+        "title": "Near-Miss Well Control Incident",
+        "description": "Bottom-hole pressure sensor failed during tripping out. Manual detection by driller prevented potential kick.",
+        "resolution_hours": 24,
+        "root_cause": "Component fatigue in older sensor suite",
+        "preventable": true,
+        "vendor_response_quality": "excellent",
+        "vendor_actions_taken": "Replaced entire sensor suite, updated manual monitoring protocols",
+        "business_impact": "High - potential blowout risk (mitigated), 24h operational delay",
+        "follow_up_actions": [
+            "Mandatory driller training on manual sign detection",
+            "Audit of all rig sensors"
+        ]
+    }
+]

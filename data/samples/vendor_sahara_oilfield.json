@@ -1,0 +1,54 @@
+{
+    "contract_id": "CNT-2024-030",
+    "vendor_name": "Sahara Oilfield Chemicals",
+    "vendor_id": "VEN-OG-003",
+    "department": "Chemicals",
+    "contract_type": "Supply Agreement",
+    "value_usd": 1500000,
+    "kpis": [
+        {
+            "name": "OTD Accuracy",
+            "target": 96.0,
+            "actual": 79.5,
+            "unit": "percentage",
+            "description": "On Time Delivery — failing badly, impacting well production schedules"
+        },
+        {
+            "name": "Batch Consistency",
+            "target": 99.5,
+            "actual": 97.2,
+            "unit": "percentage",
+            "description": "Spec compliance — one contamination event in May (Batch-12B)"
+        },
+        {
+            "name": "Lab Turnaround",
+            "target": 5.0,
+            "actual": 9.5,
+            "unit": "days",
+            "description": "Field sample analysis — nearly double the contractual SLA"
+        },
+        {
+            "name": "Stock Coverage",
+            "target": 30.0,
+            "actual": 12.0,
+            "unit": "days",
+            "description": "Days of safety stock held at Daleel warehouse — critically low"
+        }
+    ],
+    "incidents": [
+        {
+            "id": "INC-OG-003",
+            "date": "2024-05-18",
+            "severity": "medium",
+            "description": "Batch-12B scale inhibitor contamination discovered pre-injection. Caused 48h production delay on South Block.",
+            "resolved": true,
+            "resolution_time_hours": 72
+        }
+    ],
+    "budget": {
+        "allocated": 1500000,
+        "spent": 1350000,
+        "overrun_percentage": -10.0
+    },
+    "notes": "Sahara's technical expertise is genuine — they are the ONLY qualified supplier of High-H2S production inhibitors for Daleel's South Block wells. However their execution is increasingly unreliable. OTD has collapsed to 79.5%, lab turnaround is nearly double contractual SLA, and safety stock is critically low. The contamination incident in May was a near-miss. Sole-source dependency creates significant risk."
+}

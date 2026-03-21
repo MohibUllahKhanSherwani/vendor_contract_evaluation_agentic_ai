@@ -1,0 +1,28 @@
+# Pipeline & Integrity - Industry Benchmarks (2024)
+
+## Performance Standards
+
+### Inspection Coverage (ILI/Manual)
+- **Target**: > 98% of planned pipeline length inspected annually
+- **Industry Average**: 92% - 95%
+- **Below Standard**: < 90%
+
+### Defect Detection Accuracy
+- **Target Rate**: > 97% accuracy compared to verification excavations
+- **Warning Sign**: False negative rate (missed defects) > 5%
+
+### Repair Response Time
+- **Critical (Leak/Imminent Failure)**: < 24 hours mobilization
+- **High (Significant Corrosion)**: < 7 days
+- **Medium**: < 30 days
+
+## Cost Benchmarks (2024)
+
+### Intelligent Pigging (per km)
+- **Base Rate**: $800 - $1,200
+- **Specialized (High Resolution)**: $1,500 - $2,200
+
+## HSE & Safety Benchmarks
+- **Leak Frequency**: < 0.05 per 1,000 km
+- **Contractor Compliance**: 100% adherence to Excavation & Ground Disturbance permits.
+- **Environmental Incidents**: Zero spills > 1 barrel threshold.

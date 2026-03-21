@@ -1,0 +1,45 @@
+{
+    "contract_id": "CNT-2024-020",
+    "vendor_name": "Gulf Pipeline Integrity Ltd",
+    "vendor_id": "VEN-OG-002",
+    "department": "Pipeline",
+    "contract_type": "Inspection & Maintenance",
+    "value_usd": 3200000,
+    "kpis": [
+        {
+            "name": "Inspection Coverage",
+            "target": 98.0,
+            "actual": 99.8,
+            "unit": "percentage",
+            "description": "Total length of pipeline network inspected vs planned"
+        },
+        {
+            "name": "Defect Detection Accuracy",
+            "target": 97.0,
+            "actual": 99.2,
+            "unit": "percentage",
+            "description": "Accuracy of ILI defect sizing against verification excavations"
+        },
+        {
+            "name": "Critical Repair Time",
+            "target": 24.0,
+            "actual": 17.5,
+            "unit": "hours",
+            "description": "Average mobilization and fix time for critical integrity issues"
+        },
+        {
+            "name": "Budget Compliance",
+            "target": 100.0,
+            "actual": 79.7,
+            "unit": "percentage",
+            "description": "Actual spend vs. allocated budget (currently 20% over due to unforeseen excavations)"
+        }
+    ],
+    "incidents": [],
+    "budget": {
+        "allocated": 3200000,
+        "spent": 3655111,
+        "overrun_percentage": 14.2
+    },
+    "notes": "Gulf Pipeline Integrity consistently exceeds all technical and operational KPIs. However they are currently 20.3% over budget, attributing it to 'unforeseen excavation requirements'. Their technical superiority is unquestioned but their cost management is a significant concern for the contract cycle."
+}
