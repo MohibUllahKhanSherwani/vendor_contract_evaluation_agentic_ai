@@ -1,75 +1,60 @@
-"""
-FastAPI Application
-REST API for contract evaluation system
-"""
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict, List, Optional
 import json
 import sys
+from dotenv import load_dotenv
 from pathlib import Path
 
-# Add project root to path to resolve 'src' imports
+load_dotenv()
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from src.agents import (
-    OrchestratorAgent,
-    DataIntakeAgent,
-    PerformanceAnalysisAgent,
-    RiskAssessmentAgent,
-    ReasoningAgent
-)
-from src.utils import CSVOutputHandler
+from src.agents import DataIntakeAgent
 
-# Initialize FastAPI app
 app = FastAPI(
     title="Daleel Petroleum Contract Evaluation API",
     description="Agentic AI system for automated contract performance evaluation",
     version="0.1.0"
 )
 
-# CORS middleware (allow frontend access)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React frontend
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Initialize agents (singleton pattern)
-orchestrator = OrchestratorAgent()
 data_intake = DataIntakeAgent()
-performance = PerformanceAnalysisAgent()
-risk = RiskAssessmentAgent()
-reasoning_agent = ReasoningAgent()
-csv_handler = CSVOutputHandler()
 
-agents = {
-    "data_intake": data_intake,
-    "performance": performance,
-    "risk": risk
+evaluation_results: Dict[str, dict] = {}
+
+SAMPLE_VENDORS = {
+    "vendor_abc_it_solutions": {"file": "data/samples/vendor_abc_it_solutions.json"},
+    "vendor_gulf_pipeline": {"file": "data/samples/vendor_gulf_pipeline.json"},
+    "vendor_desert_drilling": {"file": "data/samples/vendor_desert_drilling.json"},
+    "vendor_sahara_oilfield": {"file": "data/samples/vendor_sahara_oilfield.json"},
+    "vendor_petro_logistics": {"file": "data/samples/vendor_petro_logistics.json"},
 }
 
 
-# Request/Response models
 class EvaluationRequest(BaseModel):
-    """Contract evaluation request"""
     contract_id: str
-    contract_file: Optional[str] = None  # Path to contract JSON
-    contract_data: Optional[Dict] = None  # Or direct contract data
+    contract_file: Optional[str] = None
+    contract_data: Optional[Dict] = None
 
 
 class EvaluationResponse(BaseModel):
-    """Contract evaluation response"""
     contract_id: str
     vendor_name: str
     status: str
     performance_score: Optional[float] = None
+    grade: Optional[str] = None
     risk_level: Optional[str] = None
     recommendation: Optional[str] = None
-    timestamp: str
+    timestamp: Optional[str] = None
     reasoning_chain: Optional[List[str]] = None
     justification: Optional[str] = None
     confidence_level: Optional[str] = None
@@ -77,7 +62,6 @@ class EvaluationResponse(BaseModel):
 
 @app.get("/")
 def root():
-    """API root endpoint"""
     return {
         "name": "Daleel Petroleum Contract Evaluation API",
         "version": "0.1.0",
@@ -87,29 +71,19 @@ def root():
 
 @app.get("/health")
 def health_check():
-    """Health check endpoint"""
     return {
         "status": "healthy",
         "agents": {
-            "orchestrator": "operational",
             "data_intake": "operational",
             "performance": "operational",
-            "risk": "operational"
+            "risk": "operational",
+            "reasoning": "operational"
         }
     }
 
 
 @app.post("/evaluate", response_model=EvaluationResponse, status_code=status.HTTP_200_OK)
-def evaluate_contract(request: EvaluationRequest):
-    """
-    Evaluate a contract
-    
-    Args:
-        request: Evaluation request with contract_id and contract data
-        
-    Returns:
-        Evaluation result
-    """
+async def evaluate_contract(request: EvaluationRequest):
     # Load contract data
     if request.contract_data:
         contract = request.contract_data
@@ -128,47 +102,31 @@ def evaluate_contract(request: EvaluationRequest):
             detail="Must provide either contract_data or contract_file"
         )
     
-    # Validate contract_id matches
     if contract.get("contract_id") != request.contract_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Contract ID mismatch"
         )
     
-    # Run evaluation
     try:
-        # Standard analytical evaluation
-        result = orchestrator.evaluate_contract(contract, agents)
+        import uuid
+        from src.executor import evaluate_contract_flow
+        session_id = str(uuid.uuid4())
+        user_id = "test_user"
         
-        # Deep reasoning evaluation (LLM synthesis across all sources)
-        try:
-            # Note: This will load additional files (CSV, JSON, TXT, MD) if they exist
-            reasoning_result = reasoning_agent.evaluate(request.contract_id)
-            
-            # Merge reasoning into result
-            result["reasoning_chain"] = reasoning_result.get("reasoning_chain", [])
-            result["justification"] = reasoning_result.get("justification", "")
-            result["confidence_level"] = reasoning_result.get("confidence_level", "LOW")
-            
-            # Optionally override recommendation and risk if reasoning is high confidence
-            # For now, we prefer the reasoning recommendation as it's more "agentic"
-            if reasoning_result.get("recommendation"):
-                result["recommendation"] = reasoning_result["recommendation"]
-        except Exception as reasoning_err:
-            print(f"Reasoning evaluation failed (non-critical): {reasoning_err}")
-
-        # Save to CSV
-        csv_handler.save_result(result)
+        result = await evaluate_contract_flow(session_id, user_id, contract)
         
-        # Return response
+        evaluation_results[result.get("contract_id", "")] = result
+        
         return EvaluationResponse(
-            contract_id=result["contract_id"],
-            vendor_name=result["vendor_name"],
-            status=result["status"],
+            contract_id=result.get("contract_id", ""),
+            vendor_name=result.get("vendor_name", ""),
+            status=result.get("status", "completed"),
             performance_score=result.get("performance_score"),
+            grade=result.get("grade"),
             risk_level=result.get("risk_level"),
             recommendation=result.get("recommendation"),
-            timestamp=result["timestamp"],
+            timestamp=result.get("timestamp", ""),
             reasoning_chain=result.get("reasoning_chain"),
             justification=result.get("justification"),
             confidence_level=result.get("confidence_level")
@@ -181,99 +139,79 @@ def evaluate_contract(request: EvaluationRequest):
         )
 
 
+@app.get("/vendors")
+def list_vendors():
+    vendors = []
+    root_path = Path(__file__).parent.parent
+    for sample_key, sample_info in SAMPLE_VENDORS.items():
+        file_path = root_path / sample_info["file"]
+        if file_path.exists():
+            with open(file_path, 'r', encoding='utf-8') as f:
+                contract = json.load(f)
+            contract_id = contract.get("contract_id", "")
+            if contract_id in evaluation_results:
+                vendors.append(evaluation_results[contract_id])
+            else:
+                vendors.append({
+                    "contract_id": contract_id,
+                    "vendor_name": contract.get("vendor_name", "Unknown"),
+                    "status": "pending",
+                    "sample_key": sample_key
+                })
+    return {"count": len(vendors), "vendors": vendors}
+
+
 @app.get("/results/{contract_id}")
 def get_result(contract_id: str):
-    """
-    Get evaluation result by contract ID
-    
-    Args:
-        contract_id: Contract ID
-        
-    Returns:
-        Evaluation result from CSV
-    """
-    result = csv_handler.get_by_contract_id(contract_id)
-    
+    result = evaluation_results.get(contract_id)
     if not result:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No evaluation found for contract {contract_id}"
         )
-    
     return result
 
 
 @app.get("/results")
 def list_results():
-    """
-    List all evaluation results
-    
-    Returns:
-        List of all evaluations
-    """
-    results = csv_handler.read_results()
+    results = list(evaluation_results.values())
     return {
         "count": len(results),
         "results": results
     }
 
 
-@app.get("/audit-log")
-def get_audit_log(limit: int = 50):
-    """
-    Get audit log entries
-    
-    Args:
-        limit: Maximum number of entries to return
-        
-    Returns:
-        Audit log entries
-    """
-    audit_trail = orchestrator.get_audit_trail()
-    
-    # Return most recent entries
-    recent = audit_trail[-limit:] if len(audit_trail) > limit else audit_trail
-    recent.reverse()  # Most recent first
-    
-    return {
-        "count": len(recent),
-        "total": len(audit_trail),
-        "entries": recent
-    }
 
 
 @app.post("/evaluate-sample/{sample_name}")
-def evaluate_sample(sample_name: str):
-    """
-    Evaluate a sample contract by name
-    
-    Args:
-        sample_name: Sample name (vendor_abc_it_solutions, vendor_xyz_tech, vendor_problematic_corp)
-        
-    Returns:
-        Evaluation result
-    """
-    # Map sample names to files
-    sample_files = {
-        "vendor_abc_it_solutions": "data/samples/vendor_abc_it_solutions.json",
-        "vendor_xyz_tech": "data/samples/vendor_xyz_tech.json",
-        "vendor_problematic_corp": "data/samples/vendor_problematic_corp.json",
-        "abc": "data/samples/vendor_abc_it_solutions.json",
-        "xyz": "data/samples/vendor_xyz_tech.json",
-        "problematic": "data/samples/vendor_problematic_corp.json"
+async def evaluate_sample(sample_name: str):
+    shorthands = {
+        "abc": "vendor_abc_it_solutions",
+        "xyz": "vendor_xyz_tech",
+        "problematic": "vendor_problematic_corp",
+        "drilling": "vendor_desert_drilling",
+        "pipeline": "vendor_gulf_pipeline",
+        "chemicals": "vendor_sahara_oilfield",
+        "logistics": "vendor_petro_logistics",
+        "hse": "vendor_apex_hse"
     }
     
-    contract_file = sample_files.get(sample_name.lower())
+    sample_key = sample_name.lower()
+    if sample_key in shorthands:
+        sample_key = shorthands[sample_key]
+        
+    sample_info = SAMPLE_VENDORS.get(sample_key)
     
-    if not contract_file:
+    if not sample_info:
+        available = list(SAMPLE_VENDORS.keys()) + list(shorthands.keys())
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Unknown sample: {sample_name}. Available: {', '.join(sample_files.keys())}"
+            detail=f"Unknown sample: {sample_name}. Available: {', '.join(available)}"
         )
 
+    contract_file = sample_info["file"]
     contract_file_path = Path(contract_file)
     
-    # Resolve path relative to project root if not found in current directory
     if not contract_file_path.exists():
         root_path = Path(__file__).parent.parent
         contract_file_path = root_path / contract_file
@@ -284,7 +222,6 @@ def evaluate_sample(sample_name: str):
             detail=f"Contract file not found: {contract_file_path}"
         )
     
-    # Load and evaluate
     with open(contract_file_path, 'r', encoding='utf-8') as f:
         contract = json.load(f)
     
@@ -293,7 +230,7 @@ def evaluate_sample(sample_name: str):
         contract_data=contract
     )
     
-    return evaluate_contract(request)
+    return await evaluate_contract(request)
 
 
 if __name__ == "__main__":
