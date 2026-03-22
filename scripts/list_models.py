@@ -11,9 +11,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 load_dotenv()
 
 def list_gemini_models():
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
-        print("Error: GEMINI_API_KEY not found in .env file")
+        print("Error: GOOGLE_API_KEY not found in .env file")
         return
 
     try:
