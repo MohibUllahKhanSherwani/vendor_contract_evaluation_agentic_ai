@@ -102,9 +102,11 @@ graph TD
 ## 🏁 Getting Started
 
 ### 1. Configuration (.env)
+This system supports **retry logic**, so you can add as many API keys as you want using the below naming convention, also edit the config.yaml file to list the API keys there
 ```env
-GOOGLE_API_KEY_1=your_first_key
+GOOGLE_API_KEY=your_first_key
 GOOGLE_API_KEY_2=your_second_key
+GOOGLE_API_KEY_n= nth API key
 ```
 
 ### 2. Backend Setup
