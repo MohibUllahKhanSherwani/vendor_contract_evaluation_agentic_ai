@@ -1,5 +1,9 @@
 # Agentic AI Contracts Specialist: Intelligence Hub 🚀
 
+> [!IMPORTANT]
+> **🏢 Professional Context**
+> This platform was designed and prepared for an **Omani Energy Sector client** during my tenure at **Kalsoft**. It incorporates specific strategic requirements and compliance considerations for the Gulf region.
+
 [![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)]()
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688.svg)]()
@@ -7,6 +11,28 @@
 [![React](https://img.shields.io/badge/Frontend-React_Vite-61DAFB.svg)]()
 
 An advanced **Agentic AI** platform designed using the **Google Agent Development Kit (ADK)** to automate and deepen contract performance evaluation. Moving beyond simple data visualization, this system functions as an **Autonomous Contracts Agent**, utilizing a multi-agent swarm to reason through complex data for executive-level, audit-ready recommendations.
+
+---
+
+## ⚡ The Problem: The High Cost of Manual Audits
+In the energy sector, **vendor contract evaluation** is a massive bottleneck. Traditional reviews are:
+-   **Time-Intensive**: Manual cross-referencing of hundreds of SLAs and incidents.
+-   **Siloed**: Data is scattered across disjointed formats (.csv, .json, .md, .xlsx).
+-   **Subjective**: Lacks a consistent, data-driven reasoning trail for high-stakes decisions.
+
+**The Solution**: A multi-agent "intelligence hub" that ingests data from **4 heterogeneous sources** to deliver autonomous, audit-ready verdicts in seconds.
+
+---
+
+### 📊 Dashboard Overview
+<p align="center">
+  <img width="1340" height="847" alt="Executive Dashboard" src="https://github.com/user-attachments/assets/c942389c-54ae-45e6-aeeb-874cf7ea3249" />
+</p>
+
+### 🧠 AI Decision & Reasoning
+<p align="center">
+  <img width="1587" height="774" alt="AI-Decision and Thinking" src="https://github.com/user-attachments/assets/96f6ebe6-28c0-40a3-8d65-a8252e0f6cf4" />
+</p>
 
 ---
 
@@ -20,6 +46,7 @@ graph TD
         P_Data[Perf .csv] -->|Load| E[Executor]
         I_Data[Incidents .json] -->|Load| E
         R_Data[Reviews .md] -->|Load| E
+        F_Data[Financials .xlsx] -->|Load| E
     end
 
     subgraph ADK_Core [Google ADK Core]
@@ -54,9 +81,9 @@ graph TD
 *   **Google ADK Orchestration**: Uses the `Runner` and `LlmAgent` patterns for enterprise-grade AI execution.
 *   **Multi-Agent Swarm**: Specialized agents for Performance Analysis, Risk Assessment, and Final Strategic Reasoning.
 *   **Explainable AI (XAI)**: A transparent 5-step **Logic Pathway** revealing the Agent's specific reasoning process and evidence citations.
-*   **Deterministic Guardrails**: Guarantees decision consistency through a Python-based rule engine (RENEW, MONITOR, RENEGOTIATE, TERMINATE) that prevents LLM hallucination in final labels.
+*   **Deterministic Guardrails**: Guarantees decision consistency through a Python-based rule engine (RENEW, MONITOR, RENEGOTIATE, TERMINATE).
 *   **API Key Rotation**: Automated failover between multiple keys (`GOOGLE_API_KEY_1`, `_2`) to bypass rate-limits.
-*   **Data Residency Compliance**: Strategy for **Oman PDPL** alignment using Azure/Google regional datacenters (e.g., UAE North).
+*   **Data Residency Compliance**: Strategy for **Oman PDPL** alignment using Azure/Google regional datacenters.
 
 ---
 
@@ -64,22 +91,20 @@ graph TD
 
 | Component | Technology | Description |
 | :--- | :--- | :--- |
-| **Orchestration** | **Google ADK** | The core framework for agent management and session persistence. |
-| **Intelligence** | **Google Gemini 2.5 Flash** | Primary reasoning engine for high-speed, cost-effective audits. |
+| **Orchestration** | **Google ADK** | Core framework for agent management. |
+| **Intelligence** | **Gemini 2.5 Flash** | Primary reasoning engine for high-speed audits. |
 | **Backend** | **FastAPI** | High-performance async API Layer. |
 | **Frontend** | **React (Vite)** | Modern, high-contrast C-Level dashboard. |
-| **Database** | **SQLite + AioSqlite** | ADK-managed session history and conversation state. |
+| **Database** | **SQLite + AioSqlite** | ADK-managed session history. |
 
 ---
 
 ## 🏁 Getting Started
 
 ### 1. Configuration (.env)
-The system supports multiple API keys for high availability. Create a `.env` file in the root:
 ```env
 GOOGLE_API_KEY_1=your_first_key
 GOOGLE_API_KEY_2=your_second_key
-# The system will automatically rotate if Key 1 hits a 429 Rate Limit.
 ```
 
 ### 2. Backend Setup
@@ -101,8 +126,6 @@ npm run dev
 
 ## ⚙️ Logic Framework (Decision Boundaries)
 
-The system enforces the following mandatory recommendation rules based on synthesized scores and risk levels:
-
 | Condition | Recommendation | Description |
 | :--- | :--- | :--- |
 | **Score >= 85 & Risk <= MED** | **RENEW** | Strong performer with manageable risk. |
@@ -113,4 +136,4 @@ The system enforces the following mandatory recommendation rules based on synthe
 ---
 
 ## ⚖️ Compliance & Governance
-Designed for the Omani Energy Sector, the **Intelligence Hub** supports strict data handling protocols. Future implementations are geared toward local hosting or **Azure UAE North** to satisfy Oman's **Personal Data Protection Law (PDPL)** regarding data sovereignty.
+Designed for the **Omani Energy Sector**, the platform supports strict data handling protocols. Future implementations are geared toward local hosting or **Azure UAE North** to satisfy Oman's **Personal Data Protection Law (PDPL)** regarding data sovereignty.
