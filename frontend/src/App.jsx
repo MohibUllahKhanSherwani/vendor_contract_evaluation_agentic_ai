@@ -5,7 +5,7 @@ import StatsCard from './components/StatsCard';
 import PerformanceChart from './components/PerformanceChart';
 import RiskHeatmap from './components/RiskHeatmap';
 import ReasoningChain from './components/ReasoningChain';
-import { fetchEvaluations, evaluateSample } from './services/api';
+import { fetchVendors, evaluateSample } from './services/api';
 
 function App() {
     const [contracts, setContracts] = useState([]);
@@ -16,30 +16,32 @@ function App() {
     const [selectedContract, setSelectedContract] = useState(null);
 
     /**
-     * MAIN API CALL FUNCTION
-     * Fetches contract evaluations from backend
+     * Load vendors from backend (shows pending state for un-screened vendors)
      */
-    const loadContracts = async () => {
+    const loadVendors = async () => {
         try {
             setLoading(true);
             setError(null);
-            const data = await fetchEvaluations();
+            const data = await fetchVendors();
             setContracts(data);
             setLastUpdate(new Date());
         } catch (err) {
             setError(err.message);
-            console.error('Error loading contracts:', err);
+            console.error('Error loading vendors:', err);
         } finally {
             setLoading(false);
         }
     };
 
     /**
-     * TRIGGER REASONING ON SELECTION
+     * TRIGGER AI SCREENING ON VENDOR CLICK
      */
     const handleSelectContract = async (contract) => {
-        // Set basic selection immediately
-        setSelectedContract(contract);
+        // If already evaluated, just show the reasoning
+        if (contract.status === 'completed') {
+            setSelectedContract(contract);
+            return;
+        }
 
         const nameMap = {
             "ABC IT Solutions": "vendor_abc_it_solutions",
@@ -47,7 +49,7 @@ function App() {
             "Problematic IT Corp": "vendor_problematic_corp"
         };
 
-        const sampleName = nameMap[contract.vendor_name];
+        const sampleName = contract.sample_key || nameMap[contract.vendor_name];
         if (!sampleName) return;
 
         try {
@@ -66,19 +68,13 @@ function App() {
         }
     };
 
-    // Load contracts on mount
+    // Load vendors on mount
     useEffect(() => {
-        loadContracts();
+        loadVendors();
     }, []);
 
-    // Auto-refresh every 60 seconds (only if not analyzing)
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (!analyzingId) loadContracts();
-        }, 60000);
-
-        return () => clearInterval(interval);
-    }, [analyzingId]);
+    // Only compute evaluated contracts (for charts/stats)
+    const evaluatedContracts = contracts.filter(c => c.status === 'completed');
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pb-20">
@@ -98,7 +94,7 @@ function App() {
 
                         <div className="flex items-center gap-3">
                             <button
-                                onClick={loadContracts}
+                                onClick={loadVendors}
                                 disabled={loading || analyzingId}
                                 className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all disabled:opacity-30"
                                 title="Refresh data"
@@ -110,12 +106,12 @@ function App() {
                                 {analyzingId ? (
                                     <span className="flex items-center gap-2">
                                         <Brain className="w-3 h-3 text-daleel-400 animate-pulse" />
-                                        Reasoning Over {analyzingId}...
+                                        Screening in progress...
                                     </span>
                                 ) : (
                                     <span className="flex items-center gap-2">
                                         <Zap className="w-3 h-3 text-yellow-400" />
-                                        Select vendor to trigger AI
+                                        Click a vendor to run AI screening
                                     </span>
                                 )}
                             </div>
@@ -140,25 +136,26 @@ function App() {
                 {/* Dashboard Grid */}
                 {!loading || contracts.length > 0 ? (
                     <div className="space-y-6">
-                        {/* Stats Cards */}
-                        <StatsCard contracts={contracts} />
+                        {/* Stats Cards - only show stats from evaluated contracts */}
+                        <StatsCard contracts={evaluatedContracts} />
 
-                        {/* Charts Row */}
+                        {/* Charts Row - only show charts from evaluated contracts */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <PerformanceChart contracts={contracts} />
-                            <RiskHeatmap contracts={contracts} />
+                            <PerformanceChart contracts={evaluatedContracts} />
+                            <RiskHeatmap contracts={evaluatedContracts} />
                         </div>
 
-                        {/* Contracts Table */}
+                        {/* Contracts Table - show ALL vendors (pending + completed) */}
                         <ContractTable
                             contracts={contracts}
                             onSelectContract={handleSelectContract}
                             selectedContractId={selectedContract?.contract_id}
+                            analyzingId={analyzingId}
                         />
 
                         {/* Reasoning Detail View */}
                         <div className="pt-4 scroll-mt-24" id="reasoning-report">
-                            {selectedContract ? (
+                            {selectedContract && selectedContract.status === 'completed' ? (
                                 <ReasoningChain
                                     reasoning={{
                                         vendor_name: selectedContract.vendor_name,
@@ -172,8 +169,8 @@ function App() {
                             ) : (
                                 <div className="card text-center py-12 border-dashed border-slate-700">
                                     <TrendingUp className="w-10 h-10 text-slate-600 mx-auto mb-4" />
-                                    <h3 className="text-lg font-semibold text-slate-400">Select a vendor for on-demand deep reasoning</h3>
-                                    <p className="text-slate-500 text-sm">LLM analysis triggers automatically upon selection</p>
+                                    <h3 className="text-lg font-semibold text-slate-400">Click a vendor to run AI screening</h3>
+                                    <p className="text-slate-500 text-sm">Performance analysis, risk assessment, and reasoning will appear here</p>
                                 </div>
                             )}
                         </div>

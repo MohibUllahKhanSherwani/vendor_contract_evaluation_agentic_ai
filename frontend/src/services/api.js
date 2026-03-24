@@ -6,16 +6,16 @@
 const API_BASE_URL = '/api';
 
 /**
- * Fetch all evaluation results from backend
- * Endpoint: GET /results
+ * Fetch available vendors (with current evaluation status)
+ * Endpoint: GET /vendors
  */
-export const fetchEvaluations = async () => {
-    const response = await fetch(`${API_BASE_URL}/results`);
+export const fetchVendors = async () => {
+    const response = await fetch(`${API_BASE_URL}/vendors`);
     if (!response.ok) {
-        throw new Error('Failed to fetch evaluations');
+        throw new Error('Failed to fetch vendors');
     }
     const data = await response.json();
-    return data.results || [];
+    return data.vendors || [];
 };
 
 /**
@@ -30,31 +30,6 @@ export const evaluateSample = async (sampleName) => {
         throw new Error(`Failed to evaluate vendor: ${sampleName}`);
     }
     return await response.json();
-};
-
-/**
- * Fetch specific evaluation by contract ID
- * Endpoint: GET /results/{contract_id}
- */
-export const fetchEvaluationById = async (contractId) => {
-    const response = await fetch(`${API_BASE_URL}/results/${contractId}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch evaluation for ${contractId}`);
-    }
-    return await response.json();
-};
-
-/**
- * Fetch audit log entries
- * Endpoint: GET /audit-log
- */
-export const fetchAuditLog = async (limit = 50) => {
-    const response = await fetch(`${API_BASE_URL}/audit-log?limit=${limit}`);
-    if (!response.ok) {
-        throw new Error('Failed to fetch audit log');
-    }
-    const data = await response.json();
-    return data.entries || [];
 };
 
 /**
