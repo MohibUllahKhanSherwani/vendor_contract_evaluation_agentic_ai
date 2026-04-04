@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { RefreshCw, AlertCircle, Zap, Brain, TrendingUp, ShieldCheck, LogOut, User as UserIcon } from 'lucide-react';
+import { RefreshCw, AlertCircle, Zap, Brain, TrendingUp, ShieldCheck, LogOut, User as UserIcon, HelpCircle } from 'lucide-react';
 import ContractTable from './components/ContractTable';
 import StatsCard from './components/StatsCard';
 import PerformanceChart from './components/PerformanceChart';
 import RiskHeatmap from './components/RiskHeatmap';
 import ReasoningChain from './components/ReasoningChain';
 import Auth from './components/Auth';
+import OnboardingSlider from './components/OnboardingSlider';
 import { fetchVendors, evaluateSample } from './services/api';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
     const [error, setError] = useState(null);
     const [lastUpdate, setLastUpdate] = useState(null);
     const [selectedContract, setSelectedContract] = useState(null);
+    const [showOnboarding, setShowOnboarding] = useState(false);
 
     /**
      * Load vendors from backend
@@ -73,6 +75,9 @@ function App() {
     // Load vendors when user logs in
     useEffect(() => {
         if (user) {
+            if (user.isNewUser) {
+                setShowOnboarding(true);
+            }
             loadVendors();
         }
     }, [user]);
@@ -90,7 +95,9 @@ function App() {
     const evaluatedContracts = contracts.filter(c => c.status === 'completed');
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pb-20">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pb-20 relative">
+            {showOnboarding && <OnboardingSlider onComplete={() => setShowOnboarding(false)} />}
+            
             {/* Header */}
             <header className="bg-slate-900/50 backdrop-blur-md border-b border-slate-800 sticky top-0 z-20">
                 <div className="container mx-auto px-6 py-4">
@@ -117,6 +124,14 @@ function App() {
                             </div>
 
                             <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => setShowOnboarding(true)}
+                                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all"
+                                    title="Getting Started Guide"
+                                >
+                                    <HelpCircle className="w-5 h-5" />
+                                </button>
+                                
                                 <button
                                     onClick={loadVendors}
                                     disabled={loading || analyzingId}

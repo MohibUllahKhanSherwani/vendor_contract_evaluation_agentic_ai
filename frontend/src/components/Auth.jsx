@@ -31,8 +31,11 @@ const Auth = ({ onAuthSuccess }) => {
             }
 
             if (response.success) {
-                // Return user data (or at least the username)
-                onAuthSuccess(response.user || { username: formData.username, email: formData.email });
+                // Return user data with an isNewUser flag derived from the current tab
+                onAuthSuccess({ 
+                    ...(response.user || { username: formData.username, email: formData.email }), 
+                    isNewUser: !isLogin 
+                });
             } else {
                 setError(response.message || 'Authentication failed');
             }
