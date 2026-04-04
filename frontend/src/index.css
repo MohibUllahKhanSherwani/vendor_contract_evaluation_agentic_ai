@@ -28,7 +28,7 @@ body {
   }
   
   .btn-primary {
-    @apply bg-daleel-600 hover:bg-daleel-700 text-white font-medium px-4 py-2 rounded-lg transition-colors;
+    @apply bg-brand-600 hover:bg-brand-700 text-white font-medium px-4 py-2 rounded-lg transition-colors;
   }
   
   .badge {

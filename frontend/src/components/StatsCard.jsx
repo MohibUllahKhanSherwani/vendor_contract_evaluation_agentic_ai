@@ -19,8 +19,8 @@ const StatsCard = ({ contracts }) => {
             label: 'Total Contracts',
             value: total,
             icon: Activity,
-            color: 'text-daleel-400',
-            bgColor: 'bg-daleel-500/10'
+            color: 'text-brand-400',
+            bgColor: 'bg-brand-500/10'
         },
         {
             label: 'Low Risk',

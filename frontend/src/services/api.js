@@ -43,3 +43,41 @@ export const checkHealth = async () => {
     }
     return await response.json();
 };
+
+/**
+ * Register a new user
+ * Endpoint: POST /auth/register
+ */
+export const register = async (username, email, password) => {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, email, password })
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Registration failed');
+    }
+    return await response.json();
+};
+
+/**
+ * Login an existing user
+ * Endpoint: POST /auth/login
+ */
+export const login = async (email, password) => {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Login failed');
+    }
+    return await response.json();
+};

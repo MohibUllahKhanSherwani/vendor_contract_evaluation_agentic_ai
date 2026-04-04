@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
-import { RefreshCw, AlertCircle, Zap, Brain, TrendingUp, ShieldCheck } from 'lucide-react';
+import { RefreshCw, AlertCircle, Zap, Brain, TrendingUp, ShieldCheck, LogOut, User as UserIcon } from 'lucide-react';
 import ContractTable from './components/ContractTable';
 import StatsCard from './components/StatsCard';
 import PerformanceChart from './components/PerformanceChart';
 import RiskHeatmap from './components/RiskHeatmap';
 import ReasoningChain from './components/ReasoningChain';
+import Auth from './components/Auth';
 import { fetchVendors, evaluateSample } from './services/api';
 
 function App() {
+    const [user, setUser] = useState(null);
     const [contracts, setContracts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [analyzingId, setAnalyzingId] = useState(null);
@@ -16,9 +18,10 @@ function App() {
     const [selectedContract, setSelectedContract] = useState(null);
 
     /**
-     * Load vendors from backend (shows pending state for un-screened vendors)
+     * Load vendors from backend
      */
     const loadVendors = async () => {
+        if (!user) return;
         try {
             setLoading(true);
             setError(null);
@@ -37,7 +40,6 @@ function App() {
      * TRIGGER AI SCREENING ON VENDOR CLICK
      */
     const handleSelectContract = async (contract) => {
-        // If already evaluated, just show the reasoning
         if (contract.status === 'completed') {
             setSelectedContract(contract);
             return;
@@ -68,12 +70,23 @@ function App() {
         }
     };
 
-    // Load vendors on mount
+    // Load vendors when user logs in
     useEffect(() => {
-        loadVendors();
-    }, []);
+        if (user) {
+            loadVendors();
+        }
+    }, [user]);
 
-    // Only compute evaluated contracts (for charts/stats)
+    const handleLogout = () => {
+        setUser(null);
+        setContracts([]);
+        setSelectedContract(null);
+    };
+
+    if (!user) {
+        return <Auth onAuthSuccess={setUser} />;
+    }
+
     const evaluatedContracts = contracts.filter(c => c.status === 'completed');
 
     return (
@@ -83,37 +96,43 @@ function App() {
                 <div className="container mx-auto px-6 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="bg-daleel-500 p-1.5 rounded-lg">
+                            <div className="bg-brand-500 p-1.5 rounded-lg">
                                 <ShieldCheck className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-2xl font-bold text-white tracking-tight">Daleel Petroleum</h1>
+                                <h1 className="text-2xl font-bold text-white tracking-tight">Contract Intelligence</h1>
                                 <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Contract Intelligence Hub</p>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={loadVendors}
-                                disabled={loading || analyzingId}
-                                className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all disabled:opacity-30"
-                                title="Refresh data"
-                            >
-                                <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-                            </button>
+                        <div className="flex items-center gap-6">
+                            <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-slate-800/30 border border-slate-700/50 rounded-xl">
+                                <div className="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400">
+                                    <UserIcon className="w-4 h-4" />
+                                </div>
+                                <div className="text-left">
+                                    <p className="text-slate-400 text-[10px] uppercase font-bold tracking-tighter leading-none">Authenticated As</p>
+                                    <p className="text-white text-sm font-semibold">{user.username}</p>
+                                </div>
+                            </div>
 
-                            <div className="px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-400 text-xs font-mono">
-                                {analyzingId ? (
-                                    <span className="flex items-center gap-2">
-                                        <Brain className="w-3 h-3 text-daleel-400 animate-pulse" />
-                                        Screening in progress...
-                                    </span>
-                                ) : (
-                                    <span className="flex items-center gap-2">
-                                        <Zap className="w-3 h-3 text-yellow-400" />
-                                        Click a vendor to run AI screening
-                                    </span>
-                                )}
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={loadVendors}
+                                    disabled={loading || analyzingId}
+                                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all disabled:opacity-30"
+                                    title="Refresh data"
+                                >
+                                    <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+                                </button>
+
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all font-medium text-sm border border-transparent hover:border-red-400/20"
+                                >
+                                    <LogOut className="w-4 h-4" />
+                                    <span>Sign Out</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -122,6 +141,25 @@ function App() {
 
             {/* Main Content */}
             <main className="container mx-auto px-6 py-8">
+                {/* Indicator Strip */}
+                {!loading && (
+                    <div className="mb-6">
+                        <div className="px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-400 text-xs font-mono inline-block">
+                            {analyzingId ? (
+                                <span className="flex items-center gap-2">
+                                    <Brain className="w-3 h-3 text-brand-400 animate-pulse" />
+                                    Screening in progress...
+                                </span>
+                            ) : (
+                                <span className="flex items-center gap-2">
+                                    <Zap className="w-3 h-3 text-yellow-400" />
+                                    Ready for AI screening • Click any vendor in the table below
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                )}
+
                 {/* Error State */}
                 {error && (
                     <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6 flex items-start gap-3">
@@ -136,16 +174,16 @@ function App() {
                 {/* Dashboard Grid */}
                 {!loading || contracts.length > 0 ? (
                     <div className="space-y-6">
-                        {/* Stats Cards - only show stats from evaluated contracts */}
+                        {/* Stats Cards */}
                         <StatsCard contracts={evaluatedContracts} />
 
-                        {/* Charts Row - only show charts from evaluated contracts */}
+                        {/* Charts Row */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <PerformanceChart contracts={evaluatedContracts} />
                             <RiskHeatmap contracts={evaluatedContracts} />
                         </div>
 
-                        {/* Contracts Table - show ALL vendors (pending + completed) */}
+                        {/* Contracts Table */}
                         <ContractTable
                             contracts={contracts}
                             onSelectContract={handleSelectContract}
@@ -167,10 +205,10 @@ function App() {
                                     isAnalyzing={analyzingId === selectedContract.contract_id}
                                 />
                             ) : (
-                                <div className="card text-center py-12 border-dashed border-slate-700">
+                                <div className="bg-slate-800/30 rounded-3xl border border-dashed border-slate-700/50 text-center py-12">
                                     <TrendingUp className="w-10 h-10 text-slate-600 mx-auto mb-4" />
-                                    <h3 className="text-lg font-semibold text-slate-400">Click a vendor to run AI screening</h3>
-                                    <p className="text-slate-500 text-sm">Performance analysis, risk assessment, and reasoning will appear here</p>
+                                    <h3 className="text-lg font-semibold text-slate-400">No Intelligence Report Selected</h3>
+                                    <p className="text-slate-500 text-sm">Select a processed vendor to view deep-dive AI reasoning</p>
                                 </div>
                             )}
                         </div>
@@ -179,10 +217,10 @@ function App() {
                     loading && (
                         <div className="text-center py-40">
                             <div className="relative inline-block">
-                                <div className="w-16 h-16 border-4 border-daleel-500/20 border-t-daleel-500 rounded-full animate-spin"></div>
-                                <ShieldCheck className="w-6 h-6 text-daleel-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                                <div className="w-16 h-16 border-4 border-brand-500/20 border-t-brand-500 rounded-full animate-spin"></div>
+                                <ShieldCheck className="w-6 h-6 text-brand-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                             </div>
-                            <p className="text-slate-400 mt-6 font-medium">Initializing Intelligence Hub...</p>
+                            <p className="text-slate-400 mt-6 font-medium">Fetching Intelligence Reports...</p>
                         </div>
                     )
                 )}

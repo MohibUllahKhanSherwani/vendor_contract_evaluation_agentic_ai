@@ -8,10 +8,10 @@ import { Brain, Shield, Target, AlertCircle, TrendingUp, Info, CheckCircle2, Sea
 const ReasoningChain = ({ reasoning, isAnalyzing }) => {
     if (isAnalyzing) {
         return (
-            <div className="card mt-2 border-t-2 border-t-daleel-500 animate-pulse">
+            <div className="card mt-2 border-t-2 border-t-brand-500 animate-pulse">
                 <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-700/50">
-                    <div className="bg-daleel-500/20 p-3 rounded-xl border border-daleel-500/30">
-                        <Sparkles className="w-8 h-8 text-daleel-400 animate-spin-slow" />
+                    <div className="bg-brand-500/20 p-3 rounded-xl border border-brand-500/30">
+                        <Sparkles className="w-8 h-8 text-brand-400 animate-spin-slow" />
                     </div>
                     <div className="space-y-2">
                         <div className="h-3 w-32 bg-slate-700 rounded"></div>
@@ -38,7 +38,7 @@ const ReasoningChain = ({ reasoning, isAnalyzing }) => {
     const getStepIcon = (index) => {
         const icons = [TrendingUp, AlertCircle, Info, Shield, Target];
         const Icon = icons[index] || Brain;
-        return <Icon className="w-5 h-5 text-daleel-400" />;
+        return <Icon className="w-5 h-5 text-brand-400" />;
     };
 
     const getRecommendationStyle = (rec) => {
@@ -54,15 +54,15 @@ const ReasoningChain = ({ reasoning, isAnalyzing }) => {
     const RecIcon = style.icon;
 
     return (
-        <div className="card mt-2 border-t-2 border-t-daleel-500 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="card mt-2 border-t-2 border-t-brand-500 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Judgment Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 pb-6 border-b border-slate-700/50">
                 <div className="flex items-center gap-4">
-                    <div className="bg-daleel-500/20 p-3 rounded-xl border border-daleel-500/30">
-                        <Brain className="w-8 h-8 text-daleel-400" />
+                    <div className="bg-brand-500/20 p-3 rounded-xl border border-brand-500/30">
+                        <Brain className="w-8 h-8 text-brand-400" />
                     </div>
                     <div>
-                        <span className="text-[10px] font-bold text-daleel-500 uppercase tracking-[0.2em]">Deep Intelligence Report</span>
+                        <span className="text-[10px] font-bold text-brand-500 uppercase tracking-[0.2em]">Deep Intelligence Report</span>
                         <h3 className="text-2xl font-bold text-white leading-tight">
                             {reasoning.vendor_name || 'AI Reasoning Analysis'}
                         </h3>
@@ -92,7 +92,7 @@ const ReasoningChain = ({ reasoning, isAnalyzing }) => {
                         {reasoning.reasoning_chain.map((step, idx) => (
                             <div key={idx} className="flex gap-4 group">
                                 <div className="flex flex-col items-center">
-                                    <div className="flex-shrink-0 w-8 h-8 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center group-hover:border-daleel-500/50 transition-colors">
+                                    <div className="flex-shrink-0 w-8 h-8 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center group-hover:border-brand-500/50 transition-colors">
                                         {getStepIcon(idx)}
                                     </div>
                                     {idx < reasoning.reasoning_chain.length - 1 && (
@@ -124,8 +124,8 @@ const ReasoningChain = ({ reasoning, isAnalyzing }) => {
                         </p>
                     </div>
 
-                    <div className="p-5 bg-daleel-500/5 rounded-xl border border-daleel-500/10">
-                        <h4 className="text-[10px] font-bold text-daleel-400 uppercase tracking-widest mb-3">System Note</h4>
+                    <div className="p-5 bg-brand-500/5 rounded-xl border border-brand-500/10">
+                        <h4 className="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-3">System Note</h4>
                         <p className="text-slate-500 text-[11px] leading-relaxed">
                             This analysis was synthesized across multi-source data vectors using Gemini-2.5-Flash reasoning.
                         </p>

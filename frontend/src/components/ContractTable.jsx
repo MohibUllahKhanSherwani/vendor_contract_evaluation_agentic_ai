@@ -177,7 +177,7 @@ const ContractTable = ({ contracts, onSelectContract, selectedContractId, analyz
                                 {/* Status */}
                                 <td className="py-4 px-4">
                                     {isAnalyzing(contract) ? (
-                                        <span className="flex items-center gap-2 text-sm text-daleel-400">
+                                        <span className="flex items-center gap-2 text-sm text-brand-400">
                                             <Loader2 className="w-4 h-4 animate-spin" />
                                             Screening...
                                         </span>

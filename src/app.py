@@ -12,6 +12,8 @@ load_dotenv()
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.agents import DataIntakeAgent
+from src.Controllers.AuthController import router as auth_router
+from src.DTOs.EvaluationDTO import EvaluationRequest, EvaluationResponse
 
 app = FastAPI(
     title="Daleel Petroleum Contract Evaluation API",
@@ -21,14 +23,15 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-data_intake = DataIntakeAgent()
+app.include_router(auth_router, prefix="/auth", tags=["Auth"])
 
+data_intake = DataIntakeAgent()
 evaluation_results: Dict[str, dict] = {}
 
 SAMPLE_VENDORS = {
@@ -39,27 +42,6 @@ SAMPLE_VENDORS = {
     "vendor_petro_logistics": {"file": "data/samples/vendor_petro_logistics.json"},
 }
 
-
-class EvaluationRequest(BaseModel):
-    contract_id: str
-    contract_file: Optional[str] = None
-    contract_data: Optional[Dict] = None
-
-
-class EvaluationResponse(BaseModel):
-    contract_id: str
-    vendor_name: str
-    status: str
-    performance_score: Optional[float] = None
-    grade: Optional[str] = None
-    risk_level: Optional[str] = None
-    recommendation: Optional[str] = None
-    timestamp: Optional[str] = None
-    reasoning_chain: Optional[List[str]] = None
-    justification: Optional[str] = None
-    confidence_level: Optional[str] = None
-
-
 @app.get("/")
 def root():
     return {
@@ -67,7 +49,6 @@ def root():
         "version": "0.1.0",
         "status": "operational"
     }
-
 
 @app.get("/health")
 def health_check():
@@ -81,10 +62,8 @@ def health_check():
         }
     }
 
-
 @app.post("/evaluate", response_model=EvaluationResponse, status_code=status.HTTP_200_OK)
 async def evaluate_contract(request: EvaluationRequest):
-    # Load contract data
     if request.contract_data:
         contract = request.contract_data
     elif request.contract_file:
@@ -115,7 +94,6 @@ async def evaluate_contract(request: EvaluationRequest):
         user_id = "test_user"
         
         result = await evaluate_contract_flow(session_id, user_id, contract)
-        
         evaluation_results[result.get("contract_id", "")] = result
         
         return EvaluationResponse(
@@ -131,13 +109,11 @@ async def evaluate_contract(request: EvaluationRequest):
             justification=result.get("justification"),
             confidence_level=result.get("confidence_level")
         )
-        
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Evaluation failed: {str(e)}"
         )
-
 
 @app.get("/vendors")
 def list_vendors():
@@ -160,7 +136,6 @@ def list_vendors():
                 })
     return {"count": len(vendors), "vendors": vendors}
 
-
 @app.get("/results/{contract_id}")
 def get_result(contract_id: str):
     result = evaluation_results.get(contract_id)
@@ -171,7 +146,6 @@ def get_result(contract_id: str):
         )
     return result
 
-
 @app.get("/results")
 def list_results():
     results = list(evaluation_results.values())
@@ -179,9 +153,6 @@ def list_results():
         "count": len(results),
         "results": results
     }
-
-
-
 
 @app.post("/evaluate-sample/{sample_name}")
 async def evaluate_sample(sample_name: str):
@@ -201,7 +172,6 @@ async def evaluate_sample(sample_name: str):
         sample_key = shorthands[sample_key]
         
     sample_info = SAMPLE_VENDORS.get(sample_key)
-    
     if not sample_info:
         available = list(SAMPLE_VENDORS.keys()) + list(shorthands.keys())
         raise HTTPException(
@@ -211,7 +181,6 @@ async def evaluate_sample(sample_name: str):
 
     contract_file = sample_info["file"]
     contract_file_path = Path(contract_file)
-    
     if not contract_file_path.exists():
         root_path = Path(__file__).parent.parent
         contract_file_path = root_path / contract_file
@@ -229,9 +198,7 @@ async def evaluate_sample(sample_name: str):
         contract_id=contract["contract_id"],
         contract_data=contract
     )
-    
     return await evaluate_contract(request)
-
 
 if __name__ == "__main__":
     import uvicorn

@@ -5,9 +5,10 @@ import logging
 from pathlib import Path
 from typing import Dict
 from datetime import datetime
+from passlib.context import CryptContext
 from logging.handlers import RotatingFileHandler
 
-
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 # ─── YAML Loader ──────────────────────────────────────────────────────────────
 
 def load_yaml(path: Path) -> dict:
@@ -141,3 +142,13 @@ class CSVOutputHandler:
             if result.get("contract_id") == contract_id:
                 return result
         return None
+
+# ─── Auth Helpers ────────────────────────────────────────────────────────────
+
+def hash_password(password: str) -> str:
+    """Hash a password using argon2."""
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify a plain password against a hashed one using argon2."""
+    return pwd_context.verify(plain_password, hashed_password)
