@@ -16,7 +16,7 @@ from src.Controllers.AuthController import router as auth_router
 from src.DTOs.EvaluationDTO import EvaluationRequest, EvaluationResponse
 
 app = FastAPI(
-    title="Daleel Petroleum Contract Evaluation API",
+    title="Contract Evaluation Hub API",
     description="Agentic AI system for automated contract performance evaluation",
     version="0.1.0"
 )
@@ -45,7 +45,7 @@ SAMPLE_VENDORS = {
 @app.get("/")
 def root():
     return {
-        "name": "Daleel Petroleum Contract Evaluation API",
+        "name": "Contract Evaluation Hub API",
         "version": "0.1.0",
         "status": "operational"
     }
@@ -110,9 +110,11 @@ async def evaluate_contract(request: EvaluationRequest):
             confidence_level=result.get("confidence_level")
         )
     except Exception as e:
+        from src.utils.utilities import format_error_message
+        friendly_msg = format_error_message(e)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Evaluation failed: {str(e)}"
+            detail=friendly_msg
         )
 
 @app.get("/vendors")
@@ -202,6 +204,6 @@ async def evaluate_sample(sample_name: str):
 
 if __name__ == "__main__":
     import uvicorn
-    print("Starting Daleel Petroleum Contract Evaluation API...")
+    print("Starting Contract Evaluation Hub API...")
     print("API Documentation: http://localhost:8000/docs")
     uvicorn.run(app, host="0.0.0.0", port=8000)

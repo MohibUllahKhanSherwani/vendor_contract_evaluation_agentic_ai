@@ -1,7 +1,3 @@
-/**
- * Statistics Cards Component
- * Displays key metrics and summary statistics
- */
 import { Activity, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 
 const StatsCard = ({ contracts }) => {
@@ -10,71 +6,63 @@ const StatsCard = ({ contracts }) => {
     const mediumRisk = contracts.filter(c => (c.risk_level || '').toLowerCase() === 'medium').length;
     const highRisk = contracts.filter(c => (c.risk_level || '').toLowerCase() === 'high').length;
 
-    const avgScore = total > 0
-        ? (contracts.reduce((sum, c) => sum + parseFloat(c.performance_score || 0), 0) / total).toFixed(1)
-        : 0;
-
     const stats = [
         {
-            label: 'Total Contracts',
+            label: 'Total Reports',
             value: total,
             icon: Activity,
-            color: 'text-brand-400',
-            bgColor: 'bg-brand-500/10'
+            color: 'text-white',
+            borderColor: 'border-white/10',
+            glowColor: 'bg-white/5'
         },
         {
             label: 'Low Risk',
             value: lowRisk,
             icon: CheckCircle,
-            color: 'text-green-400',
-            bgColor: 'bg-green-500/10'
+            color: 'text-emerald-400',
+            borderColor: 'border-emerald-500/20',
+            glowColor: 'bg-emerald-500/10'
         },
         {
-            label: 'Medium Risk',
+            label: 'Monitor',
             value: mediumRisk,
             icon: AlertTriangle,
-            color: 'text-yellow-400',
-            bgColor: 'bg-yellow-500/10'
+            color: 'text-amber-400',
+            borderColor: 'border-amber-500/20',
+            glowColor: 'bg-amber-500/10'
         },
         {
-            label: 'High Risk',
+            label: 'High Alert',
             value: highRisk,
             icon: XCircle,
-            color: 'text-red-400',
-            bgColor: 'bg-red-500/10'
+            color: 'text-rose-400',
+            borderColor: 'border-rose-500/20',
+            glowColor: 'bg-rose-500/10'
         }
     ];
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, idx) => {
                 const Icon = stat.icon;
                 return (
-                    <div key={idx} className="card">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-slate-400 text-sm mb-1">{stat.label}</p>
-                                <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
-                            </div>
-                            <div className={`${stat.bgColor} p-3 rounded-lg`}>
+                    <div key={idx} className="card group hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+                        <div className="flex items-center gap-5">
+                            <div className={`${stat.glowColor} ${stat.borderColor} border p-3 rounded-2xl transition-all group-hover:brightness-125 duration-500 shadow-2xl`}>
                                 <Icon className={`w-6 h-6 ${stat.color}`} />
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] leading-none mb-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                                    {stat.label}
+                                </p>
+                                <p className="text-2xl font-black text-white leading-none tracking-tight">
+                                    {stat.value}
+                                </p>
                             </div>
                         </div>
                     </div>
                 );
             })}
-
-            <div className="card">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <p className="text-slate-400 text-sm mb-1">Avg Score</p>
-                        <p className="text-3xl font-bold text-white">{avgScore}</p>
-                    </div>
-                    <div className="bg-purple-500/10 p-3 rounded-lg">
-                        <Activity className="w-6 h-6 text-purple-400" />
-                    </div>
-                </div>
-            </div>
         </div>
     );
 };

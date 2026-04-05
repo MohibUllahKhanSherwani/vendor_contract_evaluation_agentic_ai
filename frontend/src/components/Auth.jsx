@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShieldCheck, User, Mail, Lock, LogIn, UserPlus, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
+import { ShieldCheck, User, Mail, Lock, LogIn, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
 import { login, register } from '../services/api';
 
 const Auth = ({ onAuthSuccess }) => {
@@ -31,7 +31,6 @@ const Auth = ({ onAuthSuccess }) => {
             }
 
             if (response.success) {
-                // Return user data with an isNewUser flag derived from the current tab
                 onAuthSuccess({ 
                     ...(response.user || { username: formData.username, email: formData.email }), 
                     isNewUser: !isLogin 
@@ -47,99 +46,100 @@ const Auth = ({ onAuthSuccess }) => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-slate-900 overflow-hidden relative">
-            {/* Background elements */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-500/10 blur-[120px] rounded-full" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full" />
+        <div className="min-h-screen flex items-center justify-center p-6 bg-[#0f1117] relative overflow-hidden">
+            {/* Ambient Ambient Glows */}
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#6366f1]/5 blur-[120px] rounded-full -mr-48 -mt-48 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-500/5 blur-[100px] rounded-full -ml-32 -mb-32 pointer-events-none" />
 
-            <div className="w-full max-w-md relative z-10 transition-all duration-500">
+            <div className="w-full max-w-sm relative z-10 animate-in fade-in zoom-in-95 duration-700">
                 {/* Logo & Header */}
-                <div className="text-center mb-8">
-                    <div className="inline-flex bg-brand-600 p-3 rounded-2xl shadow-lg shadow-brand-600/20 mb-4 animate-bounce-slow">
+                <div className="text-center mb-10">
+                    <div className="inline-flex bg-[#6366f1] p-3 rounded-[32px] shadow-2xl mb-8 group transition-all hover:scale-110 border border-white/5">
                         <ShieldCheck className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Intelligence Agent</h1>
-                    <p className="text-slate-400 text-sm font-medium uppercase tracking-widest mt-1">Autonomous Contract Evaluation</p>
+                    <h1 className="text-3xl font-black text-white tracking-tight leading-none">Evaluation Hub</h1>
+                    <p className="text-slate-500 text-sm mt-4 font-bold uppercase tracking-widest opacity-80">AI-Powered Contract Synth</p>
                 </div>
 
-                {/* Card */}
-                <div className="bg-slate-800/40 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8 shadow-2xl">
-                    <div className="flex bg-slate-900/50 p-1 rounded-xl mb-8">
+                {/* Main Auth Card */}
+                <div className="card !p-8 bg-[#1a1f2e] border-white/5 relative overflow-hidden shadow-2xl shadow-black/50">
+                    {/* Top Switcher */}
+                    <div className="flex bg-black/20 p-1 rounded-2xl mb-8 border border-white/5">
                         <button 
+                            type="button"
                             onClick={() => setIsLogin(true)}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${isLogin ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
+                            className={`flex-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${isLogin ? 'bg-white/5 text-white border border-white/10 shadow-lg' : 'text-slate-500 hover:text-white'}`}
                         >
-                            <LogIn className="w-4 h-4" />
-                            Sign In
+                            Login
                         </button>
                         <button 
+                            type="button"
                             onClick={() => setIsLogin(false)}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${!isLogin ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}
+                            className={`flex-1 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${!isLogin ? 'bg-white/5 text-white border border-white/10 shadow-lg' : 'text-slate-500 hover:text-white'}`}
                         >
-                            <UserPlus className="w-4 h-4" />
                             Register
                         </button>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-8">
                         {error && (
-                            <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
-                                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                                <p className="text-red-400 text-sm font-medium">{error}</p>
+                            <div className="bg-rose-500/5 border border-rose-500/10 rounded-2xl p-4 flex items-center gap-3 animate-in slide-in-from-top-2">
+                                <AlertCircle className="w-5 h-5 text-rose-500 flex-shrink-0" />
+                                <p className="text-rose-200/70 text-[10px] font-black leading-relaxed tracking-wide uppercase">{error}</p>
                             </div>
                         )}
 
                         {!isLogin && (
-                            <div className="space-y-1.5 animate-in fade-in slide-in-from-left-2 transition-all">
-                                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Username</label>
+                            <div className="space-y-3 animate-in fade-in slide-in-from-left-2">
+                                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
                                 <div className="relative group">
-                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-brand-400 transition-colors" />
+                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 group-focus-within:text-[#6366f1] transition-colors" />
                                     <input 
                                         type="text"
                                         name="username"
                                         value={formData.username}
                                         onChange={handleChange}
                                         placeholder="Enter your name"
-                                        className="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all"
+                                        className="input pl-11"
                                         required={!isLogin}
                                     />
                                 </div>
                             </div>
                         )}
 
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Email Address</label>
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Email Address</label>
                             <div className="relative group">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-brand-400 transition-colors" />
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 group-focus-within:text-[#6366f1] transition-colors" />
                                 <input 
                                     type="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
                                     placeholder="name@company.com"
-                                    className="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all"
+                                    className="input pl-11"
                                     required
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider ml-1">Security Password</label>
+                        <div className="space-y-3">
+                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Password</label>
                             <div className="relative group">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-brand-400 transition-colors" />
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 group-focus-within:text-[#6366f1] transition-colors" />
                                 <input 
                                     type={showPassword ? "text" : "password"}
                                     name="password"
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="••••••••"
-                                    className="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-3 pl-12 pr-12 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all"
+                                    className="input pl-11 pr-12"
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200 transition-colors"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors"
                                 >
                                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
@@ -149,23 +149,35 @@ const Auth = ({ onAuthSuccess }) => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold py-3.5 rounded-xl mt-4 shadow-lg shadow-brand-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group active:scale-[0.98]"
+                            className={`btn-primary w-full mt-6 h-12 shadow-2xl relative group overflow-hidden`}
                         >
                             {loading ? (
                                 <Loader2 className="w-5 h-5 animate-spin" />
                             ) : (
                                 <>
-                                    {isLogin ? 'Sign In' : 'Sign Up'}
-                                    <LogIn className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                    <span className="uppercase tracking-[0.2em] text-[10px] font-black relative z-10">{isLogin ? 'Login' : 'Register'}</span>
+                                    <LogIn className="w-4 h-4 group-hover:translate-x-1 transition-transform relative z-10" />
+                                    <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </>
                             )}
                         </button>
                     </form>
-
-                    <p className="text-slate-500 text-xs text-center mt-6">
-                        Securely connected to the Automated Compliance Network
-                    </p>
                 </div>
+                
+                <p className="text-center mt-12 text-slate-700 text-[9px] font-black uppercase tracking-[0.3em]">
+                    Enterprise Security Layer Active
+                </p>
+
+                <p className="text-center mt-10 text-[#64748b] text-xs font-bold">
+                    {isLogin ? "New to the platform?" : "Joined us before?"}
+                    <button 
+                        type="button"
+                        onClick={() => setIsLogin(!isLogin)}
+                        className="ml-2 text-white font-black hover:text-[#6366f1] transition-colors underline decoration-[#6366f1]/30 underline-offset-8"
+                    >
+                        {isLogin ? 'Register' : 'Login'}
+                    </button>
+                </p>
             </div>
         </div>
     );

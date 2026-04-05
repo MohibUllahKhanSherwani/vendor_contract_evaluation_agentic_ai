@@ -4,27 +4,27 @@ import { ChevronRight, ChevronLeft, Check, Sparkles } from 'lucide-react';
 const slides = [
     {
         id: 1,
-        title: "The Problem With Siloed Data",
-        subtitle: "Fragmented systems slow down critical evaluation.",
-        description: "Evaluating contracts across Metrics, Incidents, Benchmarks, and Reviews manually is disjointed and slow. This siloed data leads to subjective ratings and significant delays in detecting performance trends.",
+        title: "The Problem With Messy Data",
+        subtitle: "Managing vendor data manually is slow and difficult.",
+        description: "Checking vendor performance across different spreadsheets and emails is frustrating. This scattered data leads to mistakes and makes it hard to see which suppliers are actually reliable.",
         image: "/slider_1_problem.png",
         accent: "from-orange-500/20 to-red-600/20 text-orange-400 border-orange-500/50",
         bgGlow: "bg-orange-500/20"
     },
     {
         id: 2,
-        title: "Agentic Synthesis",
-        subtitle: "A 360-degree view synthesized by AI.",
-        description: "Our multi-agentic system connects these four disparate sources. The Reasoning Agent performes a deep-dive analysis, weighing quantitative KPI metrics against qualitative reviews to provide objective, evidence-based recommendations.",
+        title: "AI-Powered Analysis",
+        subtitle: "A complete view of your suppliers, analyzed by AI.",
+        description: "Our AI automatically connects all your vendor data—like performance scores, incident reports, and reviews—into one place. It does the heavy lifting for you, providing clear and objective summaries.",
         image: "/slider_2_solution.png",
-        accent: "from-blue-500/20 to-brand-600/20 text-brand-400 border-brand-500/50",
-        bgGlow: "bg-brand-500/20"
+        accent: "from-blue-500/20 to-accent/20 text-accent border-accent/50",
+        bgGlow: "bg-accent/20"
     },
     {
         id: 3,
-        title: "Intelligence At Your Fingertips",
-        subtitle: "Deep-dive analysis is just one click away.",
-        description: "Your personalized dashboard provides a bird's eye view of vendor health. Simply click any vendor in the evaluation table below to trigger the AI screening and view a full reasoning chain and grade report.",
+        title: "Smart Insights",
+        subtitle: "Expert evaluation is just one click away.",
+        description: "Your personalized dashboard gives you a bird's-eye view of vendor health. Simply select any vendor from the registry to start the AI evaluation and see the final grade and report.",
         image: "/slider_3_action.png",
         accent: "from-teal-500/20 to-emerald-600/20 text-teal-400 border-teal-500/50",
         bgGlow: "bg-teal-500/20"
@@ -60,84 +60,108 @@ const OnboardingSlider = ({ onComplete }) => {
     const slide = slides[currentSlide];
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950 overflow-hidden">
-            {/* Background Glow */}
-            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] rounded-full blur-[120px] transition-colors duration-1000 ${slide.bgGlow} opacity-30`} />
-
-            <div className="relative w-full max-w-6xl w-[90%] md:h-[80vh] bg-slate-900/60 backdrop-blur-2xl border border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#08090A]/90 backdrop-blur-2xl overflow-hidden p-4 md:p-12 animate-in fade-in duration-700">
+            <div className={`relative w-full transition-all duration-700 ease-out shadow-[0_50px_100px_rgba(0,0,0,0.8)] border border-white/10 rounded-[40px] flex flex-col md:flex-row bg-[#0B0C0E] overflow-hidden ${
+                currentSlide === 2 ? 'max-w-7xl h-[650px]' : 'max-w-5xl h-[600px]'
+            }`}>
                 
-                {/* Left Side - Image/Visuals */}
-                <div className="md:w-1/2 relative bg-slate-950/50 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-slate-700/50 p-8">
-                    <img 
-                        src={slide.image} 
-                        alt={slide.title}
-                        className={`w-full max-h-[40vh] md:max-h-none object-contain transition-all duration-700 transform ${animateImages ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
-                    />
+                {/* Visual Section */}
+                <div 
+                    className={`relative transition-all duration-700 border-r border-white/5 bg-[#0a0b0c] flex flex-col items-center justify-center overflow-hidden z-10 ${
+                        currentSlide === 2 ? 'md:w-[70%]' : 'md:w-1/2'
+                    }`}
+                >
+                    {/* Ambient Glow behind the image */}
+                    <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] ${slide.bgGlow} blur-[120px] rounded-full transition-all duration-1000 opacity-20`} />
+                    
+                    <div 
+                        className={`relative w-full h-full flex items-center justify-center transition-all duration-1000 p-8 md:p-12`}
+                    >
+                        <img 
+                            src={slide.image} 
+                            alt={slide.title}
+                            className={`w-full h-auto object-contain transition-all duration-1000 transform
+                                ${animateImages ? 'opacity-100' : 'opacity-0 scale-[0.98]'}
+                                ${currentSlide === 2 
+                                    ? 'scale-100' 
+                                    : 'scale-100 md:scale-[1.1]'
+                                }
+                            `}
+                            style={currentSlide === 2 ? {
+                                filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.6))'
+                            } : {}}
+                        />
+                        
+                        {/* Dynamic Edge Mask for Dashboard */}
+                        {currentSlide === 2 && (
+                            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0a0b0c] to-transparent z-20" />
+                        )}
+                    </div>
                 </div>
 
-                {/* Right Side - Content */}
-                <div className="md:w-1/2 p-8 md:p-14 flex flex-col justify-center gap-6 relative">
-                    {/* Tags */}
-                    <div className="flex justify-between items-center w-full">
-                        <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border bg-gradient-to-r text-xs font-bold uppercase tracking-wider ${slide.accent}`}>
-                            <Sparkles className="w-3.5 h-3.5" />
-                            Step {currentSlide + 1} of {slides.length}
+                {/* Narrative Section */}
+                <div className={`p-8 md:p-14 flex flex-col justify-center relative transition-all duration-700 z-20 shadow-[-20px_0_40px_rgba(0,0,0,0.5)] ${
+                    currentSlide === 2 ? 'md:w-[30%] bg-[#111214]' : 'md:w-1/2 bg-[#111214]'
+                }`}>
+                    <div className="flex justify-between items-center w-full mb-8">
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.05] text-white text-[10px] font-black uppercase tracking-[0.25em] border border-white/5">
+                            <Sparkles className="w-3.5 h-3.5 text-accent" />
+                            STEP {currentSlide + 1} OF {slides.length}
                         </div>
                         
-                        {/* Skip btn */}
                         <button 
                             onClick={onComplete}
-                            className="text-slate-500 hover:text-slate-300 text-sm font-medium transition-colors"
+                            className="text-slate-500 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors"
                         >
-                            Skip intro
+                            Skip
                         </button>
                     </div>
 
-                    <div className={`transition-all duration-500 transform ${animateImages ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
-                        <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mt-6">
+                    <div className={`transition-all duration-700 transform ${animateImages ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+                        <h2 className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-tight mb-4">
                             {slide.title}
                         </h2>
-                        <h3 className="text-xl md:text-2xl font-medium text-slate-300 mt-3">
+                        <h3 className="text-sm md:text-base font-bold text-accent mb-4">
                             {slide.subtitle}
                         </h3>
-                        <p className="text-slate-400 leading-relaxed mt-6 text-lg">
+                        <p className="text-slate-400 leading-relaxed text-sm font-medium opacity-80">
                             {slide.description}
                         </p>
                     </div>
 
-                    <div className="mt-auto pt-10 flex items-center justify-between">
-                        {/* Dots */}
-                        <div className="flex gap-2">
+                    <div className="mt-14 flex items-center justify-between">
+                        {/* Interactive Pagination */}
+                        <div className="flex gap-2.5">
                             {slides.map((_, idx) => (
                                 <div 
                                     key={idx}
                                     className={`h-1.5 rounded-full transition-all duration-500 ${
-                                        idx === currentSlide ? 'w-8 bg-brand-400' : 'w-2 bg-slate-700'
+                                        idx === currentSlide ? 'w-10 bg-white' : 'w-2.5 bg-white/10'
                                     }`}
                                 />
                             ))}
                         </div>
 
-                        {/* Controls */}
-                        <div className="flex gap-3">
+                        {/* Navigation Actions */}
+                        <div className="flex gap-4">
                             <button
                                 onClick={prevSlide}
                                 disabled={currentSlide === 0}
-                                className="w-12 h-12 flex items-center justify-center rounded-xl border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                                className="w-12 h-12 flex items-center justify-center rounded-2xl border border-white/5 text-slate-500 hover:text-white hover:bg-white/5 disabled:opacity-0 disabled:cursor-not-allowed transition-all active:scale-90"
                             >
                                 <ChevronLeft className="w-6 h-6" />
                             </button>
                             <button
                                 onClick={nextSlide}
-                                className="px-6 h-12 flex items-center justify-center gap-2 rounded-xl bg-brand-500 hover:bg-brand-400 text-white font-semibold transition-all group active:scale-95 shadow-lg shadow-brand-500/20"
+                                className="px-8 h-12 flex items-center justify-center gap-3 rounded-2xl bg-white text-black text-xs font-black uppercase tracking-widest shadow-2xl hover:bg-slate-100 transition-all active:scale-95"
                             >
                                 {currentSlide === slides.length - 1 ? (
                                     <>
-                                        Get Started <Check className="w-5 h-5 ml-1" />
+                                        Get Started <Check className="w-4 h-4 ml-1" />
                                     </>
                                 ) : (
                                     <>
-                                        Next <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                        Next <ChevronRight className="w-4 h-4" />
                                     </>
                                 )}
                             </button>

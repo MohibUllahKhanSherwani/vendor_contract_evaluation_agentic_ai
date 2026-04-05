@@ -19,9 +19,6 @@ function App() {
     const [selectedContract, setSelectedContract] = useState(null);
     const [showOnboarding, setShowOnboarding] = useState(false);
 
-    /**
-     * Load vendors from backend
-     */
     const loadVendors = async () => {
         if (!user) return;
         try {
@@ -38,9 +35,6 @@ function App() {
         }
     };
 
-    /**
-     * TRIGGER AI SCREENING ON VENDOR CLICK
-     */
     const handleSelectContract = async (contract) => {
         if (contract.status === 'completed') {
             setSelectedContract(contract);
@@ -72,7 +66,6 @@ function App() {
         }
     };
 
-    // Load vendors when user logs in
     useEffect(() => {
         if (user) {
             if (user.isNewUser) {
@@ -95,150 +88,199 @@ function App() {
     const evaluatedContracts = contracts.filter(c => c.status === 'completed');
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 pb-20 relative">
+        <div className="flex min-h-screen bg-[#0f1117] text-[#e2e8f0] selection:bg-[#6366f1]/30">
             {showOnboarding && <OnboardingSlider onComplete={() => setShowOnboarding(false)} />}
             
-            {/* Header */}
-            <header className="bg-slate-900/50 backdrop-blur-md border-b border-slate-800 sticky top-0 z-20">
-                <div className="container mx-auto px-6 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="bg-brand-500 p-1.5 rounded-lg">
-                                <ShieldCheck className="w-6 h-6 text-white" />
+            {/* Sidebar Navigation */}
+            <aside className="w-64 border-r border-white/5 flex flex-col bg-[#1a1f2e] sticky top-0 h-screen z-30">
+                <div className="p-6">
+                    <div className="flex items-center gap-3 mb-12">
+                        <div className="bg-[#6366f1] p-1.5 rounded-lg shadow-lg shadow-[#6366f1]/20">
+                            <ShieldCheck className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-sm font-black tracking-tight leading-none text-white">Evaluation Hub</h1>
+                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#64748b] mt-1.5">Platform v4.0</p>
+                        </div>
+                    </div>
+
+                    <nav className="space-y-1">
+                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-white bg-white/5 rounded-xl border border-white/5 transition-all">
+                            <TrendingUp className="w-4 h-4 text-[#6366f1]" />
+                            Dashboard
+                        </button>
+
+                        <button 
+                            onClick={() => setShowOnboarding(true)}
+                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group"
+                        >
+                            <HelpCircle className="w-4 h-4 group-hover:text-[#6366f1] transition-colors" />
+                            Product Tour
+                        </button>
+                    </nav>
+                </div>
+
+                <div className="mt-auto p-4 border-t border-white/5">
+                    <div className="flex items-center justify-between gap-3 px-3 py-3 bg-white/[0.02] border border-white/5 rounded-2xl">
+                        <div className="flex items-center gap-2.5">
+                            <div className="w-8 h-8 rounded-xl bg-[#6366f1] flex items-center justify-center font-black text-xs text-white shadow-lg shadow-[#6366f1]/20">
+                                {user.username[0].toUpperCase()}
                             </div>
-                            <div>
-                                <h1 className="text-2xl font-bold text-white tracking-tight">Contract Intelligence</h1>
-                                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider">Contract Intelligence Hub</p>
+                            <div className="overflow-hidden">
+                                <p className="text-xs font-bold truncate text-white">{user.username}</p>
+                                <p className="text-[10px] text-[#64748b] font-bold">Standard Account</p>
                             </div>
                         </div>
-
-                        <div className="flex items-center gap-6">
-                            <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-slate-800/30 border border-slate-700/50 rounded-xl">
-                                <div className="w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400">
-                                    <UserIcon className="w-4 h-4" />
-                                </div>
-                                <div className="text-left">
-                                    <p className="text-slate-400 text-[10px] uppercase font-bold tracking-tighter leading-none">Authenticated As</p>
-                                    <p className="text-white text-sm font-semibold">{user.username}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => setShowOnboarding(true)}
-                                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all"
-                                    title="Getting Started Guide"
-                                >
-                                    <HelpCircle className="w-5 h-5" />
-                                </button>
-                                
-                                <button
-                                    onClick={loadVendors}
-                                    disabled={loading || analyzingId}
-                                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all disabled:opacity-30"
-                                    title="Refresh data"
-                                >
-                                    <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-                                </button>
-
-                                <button
-                                    onClick={handleLogout}
-                                    className="flex items-center gap-2 px-4 py-2 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-xl transition-all font-medium text-sm border border-transparent hover:border-red-400/20"
-                                >
-                                    <LogOut className="w-4 h-4" />
-                                    <span>Sign Out</span>
-                                </button>
-                            </div>
-                        </div>
+                        <button 
+                            onClick={handleLogout}
+                            className="text-slate-500 hover:text-rose-400 transition-colors"
+                        >
+                            <LogOut className="w-4 h-4" />
+                        </button>
                     </div>
                 </div>
-            </header>
+            </aside>
 
-            {/* Main Content */}
-            <main className="container mx-auto px-6 py-8">
-                {/* Indicator Strip */}
-                {!loading && (
-                    <div className="mb-6">
-                        <div className="px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-slate-400 text-xs font-mono inline-block">
-                            {analyzingId ? (
-                                <span className="flex items-center gap-2">
-                                    <Brain className="w-3 h-3 text-brand-400 animate-pulse" />
-                                    Screening in progress...
-                                </span>
-                            ) : (
-                                <span className="flex items-center gap-2">
-                                    <Zap className="w-3 h-3 text-yellow-400" />
-                                    Ready for AI screening • Click any vendor in the table below
-                                </span>
-                            )}
-                        </div>
+            {/* Main Content Area */}
+            <main className="flex-1 min-w-0 bg-[#0f1117] overflow-y-auto">
+                {/* Ambient Background Glows */}
+                <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-[#6366f1]/5 blur-[120px] rounded-full -mr-64 -mt-64 pointer-events-none" />
+                <div className="fixed bottom-0 left-64 w-[300px] h-[300px] bg-indigo-500/5 blur-[100px] rounded-full -ml-32 -mb-32 pointer-events-none" />
+
+                {/* Sub-Header / Top Bar */}
+                <div className="sticky top-0 z-20 bg-[#0f1117]/80 backdrop-blur-xl border-b border-white/5 px-12 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4 text-xs font-bold text-slate-500 uppercase tracking-widest">
+                        <span>Workspace</span>
+                        <span className="text-white/10">/</span>
+                        <span className="text-white">Active Dashboard</span>
                     </div>
-                )}
+                    
+                    <div className="flex items-center gap-2">
 
-                {/* Error State */}
-                {error && (
-                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6 flex items-start gap-3">
-                        <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
-                        <div>
-                            <h3 className="text-red-400 font-semibold">System Alert</h3>
-                            <p className="text-red-300 text-sm mt-1">{error}</p>
-                        </div>
                     </div>
-                )}
+                </div>
 
-                {/* Dashboard Grid */}
-                {!loading || contracts.length > 0 ? (
-                    <div className="space-y-6">
-                        {/* Stats Cards */}
-                        <StatsCard contracts={evaluatedContracts} />
-
-                        {/* Charts Row */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <PerformanceChart contracts={evaluatedContracts} />
-                            <RiskHeatmap contracts={evaluatedContracts} />
-                        </div>
-
-                        {/* Contracts Table */}
-                        <ContractTable
-                            contracts={contracts}
-                            onSelectContract={handleSelectContract}
-                            selectedContractId={selectedContract?.contract_id}
-                            analyzingId={analyzingId}
-                        />
-
-                        {/* Reasoning Detail View */}
-                        <div className="pt-4 scroll-mt-24" id="reasoning-report">
-                            {selectedContract && selectedContract.status === 'completed' ? (
-                                <ReasoningChain
-                                    reasoning={{
-                                        vendor_name: selectedContract.vendor_name,
-                                        reasoning_chain: selectedContract.reasoning_chain,
-                                        confidence_level: selectedContract.confidence_level,
-                                        justification: selectedContract.justification,
-                                        recommendation: selectedContract.recommendation
-                                    }}
-                                    isAnalyzing={analyzingId === selectedContract.contract_id}
-                                />
-                            ) : (
-                                <div className="bg-slate-800/30 rounded-3xl border border-dashed border-slate-700/50 text-center py-12">
-                                    <TrendingUp className="w-10 h-10 text-slate-600 mx-auto mb-4" />
-                                    <h3 className="text-lg font-semibold text-slate-400">No Intelligence Report Selected</h3>
-                                    <p className="text-slate-500 text-sm">Select a processed vendor to view deep-dive AI reasoning</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                ) : (
-                    loading && (
-                        <div className="text-center py-40">
-                            <div className="relative inline-block">
-                                <div className="w-16 h-16 border-4 border-brand-500/20 border-t-brand-500 rounded-full animate-spin"></div>
-                                <ShieldCheck className="w-6 h-6 text-brand-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                <div className="px-12 py-12 w-full">
+                    {/* Status Message */}
+                    {!loading && (
+                        <div className="mb-12">
+                            <div className="inline-flex items-center px-5 py-2.5 bg-[#6366f1]/5 border border-[#6366f1]/10 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] text-[#6366f1]">
+                                {analyzingId ? (
+                                    <span className="flex items-center gap-2">
+                                        <Brain className="w-4 h-4 animate-pulse" />
+                                        Running AI Evaluation...
+                                    </span>
+                                ) : (
+                                    <span className="flex items-center gap-2 text-slate-400">
+                                        <Zap className="w-4 h-4 text-amber-500/50" />
+                                        Ready • Select a vendor to start
+                                    </span>
+                                )}
                             </div>
-                            <p className="text-slate-400 mt-6 font-medium">Fetching Intelligence Reports...</p>
                         </div>
-                    )
-                )}
+                    )}
+
+                    {/* Global Error Notifications */}
+                    {error && (
+                        <div className="bg-rose-500/5 border border-rose-500/10 rounded-2xl p-6 mb-12 flex items-start gap-5">
+                            <div className="bg-rose-500/20 p-2.5 rounded-xl">
+                                <AlertCircle className="w-5 h-5 text-rose-500" />
+                            </div>
+                            <div>
+                                <h3 className="text-rose-500 font-black text-xs uppercase tracking-widest">System Alert</h3>
+                                <p className="text-rose-200/60 text-sm mt-1.5 font-medium">{error}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {!loading || contracts.length > 0 ? (
+                        <div className="space-y-20">
+                            {/* KPI Metrics */}
+                            <section>
+                                <h2 className="table-header">Performance Overview</h2>
+                                <StatsCard contracts={evaluatedContracts} />
+                            </section>
+
+                            {/* Data Visuals */}
+                            <section className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                                <div className="card group">
+                                    <div className="flex items-center justify-between mb-10">
+                                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em]">Performance Trend</h3>
+                                        <TrendingUp className="w-4 h-4 text-indigo-500/30 group-hover:text-indigo-400 transition-colors" />
+                                    </div>
+                                    <PerformanceChart contracts={evaluatedContracts} />
+                                </div>
+                                <div className="card group">
+                                    <div className="flex items-center justify-between mb-10">
+                                        <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.25em]">Risk Distribution</h3>
+                                        <ShieldCheck className="w-4 h-4 text-indigo-500/30 group-hover:text-indigo-400 transition-colors" />
+                                    </div>
+                                    <RiskHeatmap contracts={evaluatedContracts} />
+                                </div>
+                            </section>
+
+                            {/* Data Grid */}
+                            <section>
+                                <div className="flex items-center justify-between mb-8">
+                                    <h2 className="table-header mb-0 border-b-0">Contract Registry</h2>
+                                    <span className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest">{contracts.length} Records Loaded</span>
+                                </div>
+                                <ContractTable
+                                    contracts={contracts}
+                                    onSelectContract={handleSelectContract}
+                                    selectedContractId={selectedContract?.contract_id}
+                                    analyzingId={analyzingId}
+                                />
+                            </section>
+
+                            {/* Analysis Report Section */}
+                            <section className="pt-16 border-t border-white/5 scroll-mt-32" id="reasoning-report">
+                                {selectedContract && selectedContract.status === 'completed' ? (
+                                    <ReasoningChain
+                                        reasoning={{
+                                            vendor_name: selectedContract.vendor_name,
+                                            reasoning_chain: selectedContract.reasoning_chain,
+                                            confidence_level: selectedContract.confidence_level,
+                                            justification: selectedContract.justification,
+                                            recommendation: selectedContract.recommendation
+                                        }}
+                                        isAnalyzing={analyzingId === selectedContract.contract_id}
+                                    />
+                                ) : (
+                                    <div className="card bg-white/[0.01] border-dashed border-white/10 py-24 text-center flex flex-col items-center">
+                                        <div className="w-20 h-20 bg-white/[0.02] border border-white/5 rounded-[32px] flex items-center justify-center mb-8 shadow-2xl relative group overflow-hidden">
+                                            <div className="absolute inset-0 bg-[#6366f1]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <Brain className="w-10 h-10 text-slate-700 relative z-10" />
+                                        </div>
+                                        <h3 className="text-white font-black uppercase text-xs tracking-[0.2em]">Evaluation Report</h3>
+                                        <p className="text-slate-500 text-sm mt-4 max-w-xs mx-auto font-medium opacity-80">Select a vendor from the registry above to view the AI synthesis and report.</p>
+                                    </div>
+                                )}
+                            </section>
+                        </div>
+                    ) : (
+                        /* Loading State */
+                        <div className="flex flex-col items-center justify-center py-48 text-center">
+                            <div className="relative mb-10">
+                                <div className="w-20 h-20 border-[3px] border-white/5 border-t-[#6366f1] rounded-[32px] animate-spin"></div>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <ShieldCheck className="w-8 h-8 text-[#6366f1]/20" />
+                                </div>
+                            </div>
+                            <h3 className="text-white font-black uppercase text-xs tracking-[0.25em] mb-3">Syncing Environment</h3>
+                            <p className="text-slate-500 text-sm font-medium opacity-80">Reconstructing your evaluation workspace...</p>
+                        </div>
+                    )}
+
+                    {/* Footer / Copyright */}
+                    <footer className="mt-40 pt-10 border-t border-white/5 flex items-center justify-between text-[10px] font-black text-slate-700 uppercase tracking-[0.2em]">
+                        <p>© 2026 Contract Evaluation • Enterprise Edition</p>
+                        <div className="flex gap-10">
+                            <a href="#" className="hover:text-[#6366f1] transition-colors">Security Profile</a>
+                            <a href="#" className="hover:text-[#6366f1] transition-colors">Privacy Charter</a>
+                        </div>
+                    </footer>
+                </div>
             </main>
         </div>
     );

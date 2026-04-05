@@ -30,16 +30,16 @@
         {
             "name": "Budget Compliance",
             "target": 100.0,
-            "actual": 79.7,
+            "actual": 99.8,
             "unit": "percentage",
-            "description": "Actual spend vs. allocated budget (currently 20% over due to unforeseen excavations)"
+            "description": "Actual spend vs. allocated budget"
         }
     ],
     "incidents": [],
     "budget": {
         "allocated": 3200000,
-        "spent": 3655111,
-        "overrun_percentage": 14.2
+        "spent": 3185000,
+        "overrun_percentage": -0.47
     },
-    "notes": "Gulf Pipeline Integrity consistently exceeds all technical and operational KPIs. However they are currently 20.3% over budget, attributing it to 'unforeseen excavation requirements'. Their technical superiority is unquestioned but their cost management is a significant concern for the contract cycle."
+    "notes": "Gulf Pipeline Integrity consistently exceeds all technical and operational KPIs with exceptional precision. Their cost management is now highly disciplined, maintaining strict budget adherence without compromising on their superior technical standards. They are considered a top-tier, low-risk strategic partner for pipeline assets."
 }

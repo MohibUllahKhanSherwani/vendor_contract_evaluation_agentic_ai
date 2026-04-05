@@ -4,7 +4,7 @@ Chain-of-thought prompts that require LLM to reason over multiple sources
 """
 
 # Main reasoning prompt for contract evaluation (OPTIMIZED for token efficiency)
-REASONING_PROMPT_TEMPLATE = """You are a contract analyst for Daleel Petroleum with 15+ years in vendor management and risk assessment.
+REASONING_PROMPT_TEMPLATE = """You are a contract analyst for the organization with 15+ years in vendor management and risk assessment.
 
 Analyze vendor performance by synthesizing these data sources:
 

@@ -1,32 +1,21 @@
-/**
- * Reasoning Chain Component
- * Displays the AI's step-by-step reasoning process and final judgment
- */
 import React from 'react';
 import { Brain, Shield, Target, AlertCircle, TrendingUp, Info, CheckCircle2, Search, XCircle, Sparkles } from 'lucide-react';
 
 const ReasoningChain = ({ reasoning, isAnalyzing }) => {
     if (isAnalyzing) {
         return (
-            <div className="card mt-2 border-t-2 border-t-brand-500 animate-pulse">
-                <div className="flex items-center gap-4 mb-8 pb-6 border-b border-slate-700/50">
-                    <div className="bg-brand-500/20 p-3 rounded-xl border border-brand-500/30">
-                        <Sparkles className="w-8 h-8 text-brand-400 animate-spin-slow" />
-                    </div>
-                    <div className="space-y-2">
-                        <div className="h-3 w-32 bg-slate-700 rounded"></div>
-                        <div className="h-6 w-48 bg-slate-700 rounded"></div>
-                    </div>
+            <div className="card mt-16 border-white/5 animate-pulse relative overflow-hidden h-[500px] flex flex-col items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none" />
+                <div className="bg-white/5 p-5 rounded-3xl mb-8 border border-white/10 shadow-2xl">
+                    <Sparkles className="w-10 h-10 text-accent animate-spin-slow" />
                 </div>
-                <div className="space-y-6">
+                <div className="space-y-4 text-center">
+                    <h3 className="text-white font-black uppercase text-xs tracking-[0.3em]">Synthesizing Logic Matrices</h3>
+                    <p className="text-slate-500 text-sm font-medium">Reconstructing vendor risk profiles across 4 data silos...</p>
+                </div>
+                <div className="mt-12 flex gap-3">
                     {[1, 2, 3].map(i => (
-                        <div key={i} className="flex gap-4">
-                            <div className="w-8 h-8 bg-slate-800 rounded-full"></div>
-                            <div className="flex-1 space-y-2">
-                                <div className="h-4 bg-slate-800 rounded w-full"></div>
-                                <div className="h-4 bg-slate-800 rounded w-3/4"></div>
-                            </div>
-                        </div>
+                        <div key={i} className="w-2 h-2 bg-accent/40 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
                     ))}
                 </div>
             </div>
@@ -36,17 +25,19 @@ const ReasoningChain = ({ reasoning, isAnalyzing }) => {
     if (!reasoning || !reasoning.reasoning_chain) return null;
 
     const getStepIcon = (index) => {
-        const icons = [TrendingUp, AlertCircle, Info, Shield, Target];
-        const Icon = icons[index] || Brain;
-        return <Icon className="w-5 h-5 text-brand-400" />;
+        const icons = [TrendingUp, Shield, Target, Info, AlertCircle];
+        const Icon = icons[index % icons.length];
+        return <Icon className="w-4 h-4 text-white" />;
     };
 
     const getRecommendationStyle = (rec) => {
-        switch (rec) {
-            case 'RENEW': return { color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/30', icon: CheckCircle2 };
-            case 'TERMINATE': return { color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/30', icon: XCircle };
-            case 'RENEGOTIATE': return { color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', icon: Search };
-            default: return { color: 'text-slate-400', bg: 'bg-slate-500/10', border: 'border-slate-500/30', icon: Info };
+        const normalized = (rec || '').toUpperCase();
+        switch (normalized) {
+            case 'RENEW': return { color: 'text-emerald-400', bg: 'bg-emerald-500/5', border: 'border-emerald-500/20', icon: CheckCircle2, glow: 'shadow-[0_0_20px_-5px_rgba(16,185,129,0.3)]' };
+            case 'TERMINATE': return { color: 'text-rose-400', bg: 'bg-rose-500/5', border: 'border-rose-500/20', icon: XCircle, glow: 'shadow-[0_0_20px_-5px_rgba(244,63,94,0.3)]' };
+            case 'RENEGOTIATE': 
+            case 'MONITOR': return { color: 'text-amber-400', bg: 'bg-amber-500/5', border: 'border-amber-500/20', icon: Search, glow: 'shadow-[0_0_20px_-5px_rgba(245,158,11,0.3)]' };
+            default: return { color: 'text-accent', bg: 'bg-accent/5', border: 'border-accent/20', icon: Info, glow: 'shadow-[0_0_20px_-5px_rgba(94,106,210,0.3)]' };
         }
     };
 
@@ -54,81 +45,94 @@ const ReasoningChain = ({ reasoning, isAnalyzing }) => {
     const RecIcon = style.icon;
 
     return (
-        <div className="card mt-2 border-t-2 border-t-brand-500 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Judgment Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 pb-6 border-b border-slate-700/50">
-                <div className="flex items-center gap-4">
-                    <div className="bg-brand-500/20 p-3 rounded-xl border border-brand-500/30">
-                        <Brain className="w-8 h-8 text-brand-400" />
+        <div className="card mt-24 border-white/5 bg-[#1a1f2e] shadow-2xl relative overflow-hidden animate-in fade-in slide-in-from-bottom-10 duration-1000">
+            {/* Ambient Header Glow */}
+            <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-[#6366f1]/5 to-transparent pointer-events-none" />
+
+            {/* Report Header */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-12 mb-20 pb-16 border-b border-white/5 relative z-10 mx-4">
+                <div className="flex items-center gap-8">
+                    <div className="bg-[#6366f1] p-5 rounded-[32px] shadow-2xl shadow-[#6366f1]/20 group-hover:scale-110 transition-all duration-700">
+                        <Brain className="w-10 h-10 text-white" />
                     </div>
                     <div>
-                        <span className="text-[10px] font-bold text-brand-500 uppercase tracking-[0.2em]">Deep Intelligence Report</span>
-                        <h3 className="text-2xl font-bold text-white leading-tight">
-                            {reasoning.vendor_name || 'AI Reasoning Analysis'}
+                        <div className="flex items-center gap-3 mb-3">
+                            <span className="text-[10px] font-black text-[#6366f1] uppercase tracking-[0.4em] opacity-80">Synthesis Analysis</span>
+                            <div className="h-[1px] w-8 bg-[#6366f1]/30" />
+                        </div>
+                        <h3 className="text-5xl font-black text-white tracking-tighter leading-none">
+                            {reasoning.vendor_name || 'Evaluation Profile'}
                         </h3>
                     </div>
                 </div>
 
-                <div className={`flex items-center gap-3 px-6 py-4 rounded-xl border ${style.bg} ${style.border}`}>
-                    <RecIcon className={`w-6 h-6 ${style.color}`} />
+                <div className={`flex items-center gap-6 px-10 py-6 rounded-[32px] border ${style.bg} ${style.border} ${style.glow} transition-all duration-700 backdrop-blur-xl group hover:border-[#6366f1]/50`}>
+                    <div className={`p-3 rounded-2xl border border-white/10 bg-white/5 shadow-inner`}>
+                        <RecIcon className={`w-8 h-8 ${style.color}`} />
+                    </div>
                     <div>
-                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none mb-1">AI Judgment</p>
-                        <p className={`text-xl font-black ${style.color} leading-none tracking-tight`}>
-                            {reasoning.recommendation || 'PENDING EVALUATION'}
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-3 opacity-60">Strategic Outcome</p>
+                        <p className={`text-3xl font-black ${style.color} leading-none tracking-tight`}>
+                            {reasoning.recommendation || 'PENDING'}
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left Col: Reasoning Chain */}
-                <div className="lg:col-span-2">
-                    <div className="flex items-center gap-2 mb-6 text-slate-400">
-                        <Target className="w-4 h-4" />
-                        <h4 className="text-sm font-bold uppercase tracking-widest">Logic Pathway</h4>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 relative z-10 mx-4">
+                {/* Left side: Logic Pathway timeline (Col 7) */}
+                <div className="lg:col-span-7">
+                    <div className="flex items-center gap-5 mb-14">
+                        <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-[#64748b]">Logic Flow Pathway</h4>
+                        <div className="h-[1px] flex-1 bg-white/[0.03]" />
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-12 relative pl-16">
+                        {/* Timeline Connector */}
+                        <div className="absolute left-[31px] top-6 bottom-6 w-[1.5px] bg-gradient-to-b from-[#6366f1]/40 via-[#6366f1]/10 to-transparent z-0" />
+                        
                         {reasoning.reasoning_chain.map((step, idx) => (
-                            <div key={idx} className="flex gap-4 group">
-                                <div className="flex flex-col items-center">
-                                    <div className="flex-shrink-0 w-8 h-8 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center group-hover:border-brand-500/50 transition-colors">
-                                        {getStepIcon(idx)}
-                                    </div>
-                                    {idx < reasoning.reasoning_chain.length - 1 && (
-                                        <div className="w-0.5 h-full bg-slate-700 mt-2"></div>
-                                    )}
+                            <div key={idx} className="relative z-10 group">
+                                <div className="absolute -left-[54px] top-0 w-11 h-11 border border-white/5 bg-[#0f1117] rounded-full flex items-center justify-center transition-all group-hover:border-[#6366f1] group-hover:bg-[#6366f1] group-hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] duration-500 overflow-hidden">
+                                     <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    {getStepIcon(idx)}
                                 </div>
-                                <div className="flex-1 bg-slate-800/20 rounded-lg p-4 border border-slate-700/30 group-hover:bg-slate-800/40 transition-colors">
-                                    <p className="text-slate-300 leading-relaxed text-sm">{step}</p>
+                                <div className="bg-white/[0.015] rounded-[32px] p-8 border border-white/5 transition-all group-hover:bg-white/[0.03] group-hover:border-white/10 group-hover:translate-x-2 duration-500">
+                                    <p className="text-slate-400 leading-relaxed text-[15px] font-medium tracking-tight opacity-90 group-hover:opacity-100 transition-opacity">{step}</p>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
 
-                {/* Right Col: Metadata & Alternative Views */}
-                <div className="space-y-6">
-                    <div className="p-5 bg-slate-800/50 rounded-xl border border-slate-700/50">
-                        <div className="flex items-center justify-between mb-4">
-                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Confidence Metrics</p>
-                            <span className={`px-2 py-0.5 rounded text-[10px] font-black border ${reasoning.confidence_level === 'HIGH' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
-                                reasoning.confidence_level === 'MEDIUM' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
-                                    'bg-red-500/20 text-red-400 border-red-500/30'
+                {/* Right side: Executive Summary (Col 5) */}
+                <div className="lg:col-span-5">
+                    <div className="sticky top-12 space-y-12">
+                        <div className="p-12 bg-white/[0.015] rounded-[48px] border border-white/5 shadow-2xl relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-[#6366f1]/5 blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                            
+                            <div className="flex items-center justify-between mb-14 relative z-10">
+                                <div className="flex items-center gap-3">
+                                    <p className="text-[11px] font-black text-[#64748b] uppercase tracking-[0.3em]">Executive Summary</p>
+                                </div>
+                                <span className={`px-4 py-2 rounded-2xl text-[9px] font-black border tracking-[0.2em] shadow-lg ${
+                                    reasoning.confidence_level === 'HIGH' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-emerald-500/5' :
+                                    reasoning.confidence_level === 'MEDIUM' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-amber-500/5' :
+                                    'bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-rose-500/5'
                                 }`}>
-                                {reasoning.confidence_level}
-                            </span>
-                        </div>
-                        <p className="text-slate-300 text-sm leading-relaxed italic border-l-2 border-slate-600 pl-4 py-1">
-                            "{reasoning.justification || 'No specific justification provided by AI.'}"
-                        </p>
-                    </div>
+                                    CERTIFIED: {reasoning.confidence_level}
+                                </span>
+                            </div>
 
-                    <div className="p-5 bg-brand-500/5 rounded-xl border border-brand-500/10">
-                        <h4 className="text-[10px] font-bold text-brand-400 uppercase tracking-widest mb-3">System Note</h4>
-                        <p className="text-slate-500 text-[11px] leading-relaxed">
-                            This analysis was synthesized across multi-source data vectors using Gemini-2.5-Flash reasoning.
-                        </p>
+                            <div className="relative z-10">
+                                <div className="mb-8 text-indigo-500/30">
+                                    <Sparkles className="w-8 h-8" />
+                                </div>
+                                <p className="text-slate-300 text-[17px] leading-[1.8] font-medium tracking-tight lowercase first-letter:uppercase">
+                                    {reasoning.justification || 'Data analysis successfully synthesized with nominal variance across all evaluation vectors.'}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

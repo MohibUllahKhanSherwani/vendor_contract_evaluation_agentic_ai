@@ -1,5 +1,5 @@
 Root:
-  app_name: DaleelPetroAgent
+  app_name: ContractEvalAgent
 
 ConversationConfig:
   conversational_history_db: data/conversations.db
@@ -17,7 +17,10 @@ LLmConfig:
     - GOOGLE_API_KEY
     - GOOGLE_API_KEY_2
     - GOOGLE_API_KEY_3
-  description: Daleel Petroleum Contract Evaluation Agent
+    - GOOGLE_API_KEY_4
+    - GOOGLE_API_KEY_5
+    - GOOGLE_API_KEY_6
+  description: Enterprise Contract Evaluation Agent
 
 SessionConfig:
   max_messages: 20
