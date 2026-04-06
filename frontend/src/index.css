@@ -102,3 +102,74 @@ body {
 ::-webkit-scrollbar-thumb {
   @apply bg-slate-700 rounded-full hover:bg-slate-600 transition-colors;
 }
+
+/* ═══════════════════════════════════════
+   LANDING PAGE STYLES
+   ═══════════════════════════════════════ */
+html {
+  scroll-behavior: smooth;
+}
+
+.landing-root {
+  background-color: var(--color-bg);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.landing-feature-section {
+  scroll-margin-top: 80px;
+}
+
+/* Perspective transform for hero image */
+.rotate-y-\[-2deg\] {
+  --tw-rotate-y: -2deg;
+}
+.rotate-x-\[2deg\] {
+  --tw-rotate-x: 2deg;
+}
+
+/* Smooth animate-in utilities */
+.animate-in {
+  animation-duration: 150ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: forwards;
+}
+
+.fade-in {
+  animation-name: fadeIn;
+}
+
+.zoom-in-95 {
+  animation-name: zoomIn95;
+}
+
+.slide-in-from-top-2 {
+  animation-name: slideInFromTop;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn95 {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInFromTop {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-in,
+  .landing-root * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

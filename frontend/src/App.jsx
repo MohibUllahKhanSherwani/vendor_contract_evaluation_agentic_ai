@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { RefreshCw, AlertCircle, Zap, Brain, TrendingUp, ShieldCheck, LogOut, User as UserIcon, HelpCircle } from 'lucide-react';
+import { RefreshCw, AlertCircle, Zap, Brain, TrendingUp, ShieldCheck, LogOut, User as UserIcon } from 'lucide-react';
 import ContractTable from './components/ContractTable';
 import StatsCard from './components/StatsCard';
 import PerformanceChart from './components/PerformanceChart';
 import RiskHeatmap from './components/RiskHeatmap';
 import ReasoningChain from './components/ReasoningChain';
 import Auth from './components/Auth';
-import OnboardingSlider from './components/OnboardingSlider';
+import LandingPage from './components/LandingPage';
 import { fetchVendors, evaluateSample } from './services/api';
 
 function App() {
@@ -17,7 +17,8 @@ function App() {
     const [error, setError] = useState(null);
     const [lastUpdate, setLastUpdate] = useState(null);
     const [selectedContract, setSelectedContract] = useState(null);
-    const [showOnboarding, setShowOnboarding] = useState(false);
+    const [showLanding, setShowLanding] = useState(true);
+    const [authIsLogin, setAuthIsLogin] = useState(true);
 
     const loadVendors = async () => {
         if (!user) return;
@@ -68,9 +69,6 @@ function App() {
 
     useEffect(() => {
         if (user) {
-            if (user.isNewUser) {
-                setShowOnboarding(true);
-            }
             loadVendors();
         }
     }, [user]);
@@ -82,15 +80,19 @@ function App() {
     };
 
     if (!user) {
-        return <Auth onAuthSuccess={setUser} />;
+        if (showLanding) {
+            return <LandingPage
+                onLogin={() => { setAuthIsLogin(true); setShowLanding(false); }}
+                onSignUp={() => { setAuthIsLogin(false); setShowLanding(false); }}
+            />;
+        }
+        return <Auth onAuthSuccess={setUser} onBackToLanding={() => setShowLanding(true)} initialIsLogin={authIsLogin} />;
     }
 
     const evaluatedContracts = contracts.filter(c => c.status === 'completed');
 
     return (
         <div className="flex min-h-screen bg-[#0f1117] text-[#e2e8f0] selection:bg-[#6366f1]/30">
-            {showOnboarding && <OnboardingSlider onComplete={() => setShowOnboarding(false)} />}
-            
             {/* Sidebar Navigation */}
             <aside className="w-64 border-r border-white/5 flex flex-col bg-[#1a1f2e] sticky top-0 h-screen z-30">
                 <div className="p-6">
@@ -99,7 +101,7 @@ function App() {
                             <ShieldCheck className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-sm font-black tracking-tight leading-none text-white">Evaluation Hub</h1>
+                            <h1 className="text-sm font-black tracking-tight leading-none text-white">Contract Evaluations</h1>
                             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#64748b] mt-1.5">Platform v4.0</p>
                         </div>
                     </div>
@@ -108,14 +110,6 @@ function App() {
                         <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-white bg-white/5 rounded-xl border border-white/5 transition-all">
                             <TrendingUp className="w-4 h-4 text-[#6366f1]" />
                             Dashboard
-                        </button>
-
-                        <button 
-                            onClick={() => setShowOnboarding(true)}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all group"
-                        >
-                            <HelpCircle className="w-4 h-4 group-hover:text-[#6366f1] transition-colors" />
-                            Product Tour
                         </button>
                     </nav>
                 </div>

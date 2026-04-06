@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { ShieldCheck, User, Mail, Lock, LogIn, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
+import { ShieldCheck, User, Mail, Lock, LogIn, AlertCircle, Loader2, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { login, register } from '../services/api';
 
-const Auth = ({ onAuthSuccess }) => {
-    const [isLogin, setIsLogin] = useState(true);
+const Auth = ({ onAuthSuccess, onBackToLanding, initialIsLogin = true }) => {
+    const [isLogin, setIsLogin] = useState(initialIsLogin);
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
@@ -52,12 +52,22 @@ const Auth = ({ onAuthSuccess }) => {
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-sky-500/5 blur-[100px] rounded-full -ml-32 -mb-32 pointer-events-none" />
 
             <div className="w-full max-w-sm relative z-10 animate-in fade-in zoom-in-95 duration-700">
+                {/* Back to Landing */}
+                {onBackToLanding && (
+                    <button
+                        onClick={onBackToLanding}
+                        className="flex items-center gap-2 text-slate-500 hover:text-white text-xs font-bold uppercase tracking-widest mb-8 transition-colors group cursor-pointer"
+                    >
+                        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                        Back
+                    </button>
+                )}
                 {/* Logo & Header */}
                 <div className="text-center mb-10">
                     <div className="inline-flex bg-[#6366f1] p-3 rounded-[32px] shadow-2xl mb-8 group transition-all hover:scale-110 border border-white/5">
                         <ShieldCheck className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-black text-white tracking-tight leading-none">Evaluation Hub</h1>
+                    <h1 className="text-3xl font-black text-white tracking-tight leading-none">Contract Evaluations</h1>
                     <p className="text-slate-500 text-sm mt-4 font-bold uppercase tracking-widest opacity-80">AI-Powered Contract Synth</p>
                 </div>
 
