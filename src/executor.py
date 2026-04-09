@@ -112,34 +112,19 @@ async def evaluate_contract_flow(session_id: str, user_id: str, contract_data: d
     total_usage = {"input": 0, "output": 0, "total": 0}
     
     try:
+        from src.data_sources.factory import get_data_source
+        data_source = get_data_source()
+        
         dept = contract_data.get("department", "Unknown")
-        market_path = base_dir / "data" / "market" / f"benchmarks_{dept}.txt"
-        
-        if market_path.exists():
-            context["market_benchmarks"] = market_path.read_text(encoding='utf-8')
-        else:
-            context["market_benchmarks"] = (
-                f"WARNING: Specific industry benchmarks for department '{dept}' were NOT FOUND. "
-                "Analysis must be conducted using only the contract data provided. "
-                "Confidence in benchmarking context is LOW."
-            )
-            
         contract_id = result["contract_id"]
-        
-        perf_hist_path = base_dir / "data" / "performance" / f"{contract_id}_history.csv"
-        if perf_hist_path.exists():
-            context["performance_history"] = perf_hist_path.read_text(encoding='utf-8')
-            
-        reviews_path = base_dir / "data" / "reviews" / f"{contract_id}_reviews.md"
-        if reviews_path.exists():
-            context["past_reviews"] = reviews_path.read_text(encoding='utf-8')
-            
-        incidents_path = base_dir / "data" / "incidents" / f"{contract_id}_incidents.json"
-        if incidents_path.exists():
-            context["detailed_incidents"] = incidents_path.read_text(encoding='utf-8')
+
+        context["market_benchmarks"] = data_source.get_market_benchmarks(dept)
+        context["performance_history"] = data_source.get_performance_history(contract_id)
+        context["past_reviews"] = data_source.get_past_reviews(contract_id)
+        context["detailed_incidents"] = data_source.get_detailed_incidents(contract_id)
             
     except Exception as e:
-        print(f"Warning: Error loading auxiliary data for {result['contract_id']}: {e}")
+        logger.warning(f"Error loading auxiliary data via data source: {e}")
 
     try:
         perf_payload = json.dumps({

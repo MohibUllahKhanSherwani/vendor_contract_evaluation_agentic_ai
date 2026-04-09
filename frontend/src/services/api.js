@@ -81,3 +81,26 @@ export const login = async (email, password) => {
     }
     return await response.json();
 };
+
+/**
+ * Update the active data source for the system
+ * Endpoint: POST /config/data-source
+ */
+export const updateDataSource = async (sourceType, mongoUri, dbName) => {
+    const response = await fetch(`${API_BASE_URL}/config/data-source`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            source_type: sourceType,
+            mongo_uri: mongoUri,
+            db_name: dbName
+        })
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to update data source configuration');
+    }
+    return await response.json();
+};

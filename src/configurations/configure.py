@@ -1,5 +1,5 @@
 from pydantic import BaseModel 
-from typing import List
+from typing import List, Optional
 
 class RootConfigs:
     class Root(BaseModel):
@@ -24,3 +24,8 @@ class RootConfigs:
     
     class SessionConfig(BaseModel):
         max_messages: int
+
+    class DataConfig(BaseModel):
+        source_type: str  # "local" or "mongo"
+        mongo_uri: Optional[str] = None
+        db_name: Optional[str] = None

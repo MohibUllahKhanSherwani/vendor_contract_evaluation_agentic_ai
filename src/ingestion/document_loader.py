@@ -2,8 +2,8 @@
 Multi-Source Document Loader
 Loads contracts, performance data, incidents, market context, and reviews
 """
+import csv
 import json
-import pandas as pd
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -36,7 +36,7 @@ class DocumentLoader:
             Dictionary with all available data sources:
             {
                 "contract_id": str,
-                "performance_history": DataFrame or None,
+                "performance_history": List[Dict] or None,
                 "incidents": List[Dict] or None,
                 "market_context": str or None,
                 "past_reviews": str or None,
@@ -58,7 +58,8 @@ class DocumentLoader:
         try:
             csv_path = self.base_path / "performance" / f"{contract_id}_history.csv"
             if csv_path.exists():
-                bundle["performance_history"] = pd.read_csv(csv_path)
+                with open(csv_path, 'r', encoding='utf-8', newline='') as f:
+                    bundle["performance_history"] = list(csv.DictReader(f))
                 sources_found += 1
         except Exception as e:
             print(f"Warning: Could not load performance data: {e}")
@@ -96,27 +97,45 @@ class DocumentLoader:
         
         return bundle
     
-    def summarize_performance(self, df: Optional[pd.DataFrame]) -> str:
+    def summarize_performance(self, rows: Optional[List[Dict]]) -> str:
         """
-        Convert performance DataFrame to text summary for LLM
+        Convert performance rows to text summary for LLM
         
         Args:
-            df: Performance history DataFrame
+            rows: Performance history rows
             
         Returns:
             Text summary of performance trends
         """
-        if df is None or df.empty:
+        if not rows:
             return "No performance data available."
+
+        def to_float(value: object, default: float = 0.0) -> float:
+            try:
+                return float(value)
+            except (TypeError, ValueError):
+                return default
+
+        def to_int(value: object, default: int = 0) -> int:
+            try:
+                return int(float(value))
+            except (TypeError, ValueError):
+                return default
         
         summary = "PERFORMANCE HISTORY (Monthly Data):\n\n"
-        
+
         # Overall statistics
-        avg_uptime = df['uptime_pct'].mean()
-        avg_response = df['avg_response_hours'].mean()
-        total_incidents = df['incidents_count'].sum()
-        total_critical = df['critical_incidents'].sum()
-        avg_satisfaction = df['user_satisfaction'].mean()
+        uptime_values = [to_float(row.get('uptime_pct')) for row in rows]
+        response_values = [to_float(row.get('avg_response_hours')) for row in rows]
+        incident_values = [to_int(row.get('incidents_count')) for row in rows]
+        critical_values = [to_int(row.get('critical_incidents')) for row in rows]
+        satisfaction_values = [to_float(row.get('user_satisfaction')) for row in rows]
+
+        avg_uptime = sum(uptime_values) / len(uptime_values)
+        avg_response = sum(response_values) / len(response_values)
+        total_incidents = sum(incident_values)
+        total_critical = sum(critical_values)
+        avg_satisfaction = sum(satisfaction_values) / len(satisfaction_values)
         
         summary += f"Summary Statistics:\n"
         summary += f"- Average Uptime: {avg_uptime:.1f}%\n"
@@ -124,24 +143,31 @@ class DocumentLoader:
         summary += f"- Total Incidents: {total_incidents}\n"
         summary += f"- Critical Incidents: {total_critical}\n"
         summary += f"- Average User Satisfaction: {avg_satisfaction:.1f}/5.0\n\n"
-        
+
         # Trend analysis
-        if len(df) >= 2:
-            first_uptime = df.iloc[0]['uptime_pct']
-            last_uptime = df.iloc[-1]['uptime_pct']
+        if len(rows) >= 2:
+            first_uptime = to_float(rows[0].get('uptime_pct'))
+            last_uptime = to_float(rows[-1].get('uptime_pct'))
             trend = "IMPROVING" if last_uptime > first_uptime else "DECLINING" if last_uptime < first_uptime else "STABLE"
             summary += f"Trend: {trend} (from {first_uptime:.1f}% to {last_uptime:.1f}%)\n\n"
-        
+
         # Monthly breakdown
         summary += "Monthly Breakdown:\n"
-        for _, row in df.iterrows():
-            summary += f"  {row['month']}: "
-            summary += f"Uptime {row['uptime_pct']:.1f}%, "
-            summary += f"Response {row['avg_response_hours']:.1f}h, "
-            summary += f"{row['incidents_count']} incidents "
-            summary += f"({row['critical_incidents']} critical), "
-            summary += f"Satisfaction {row['user_satisfaction']:.1f}/5.0\n"
-        
+        for row in rows:
+            month = row.get('month', 'Unknown Month')
+            uptime = to_float(row.get('uptime_pct'))
+            response = to_float(row.get('avg_response_hours'))
+            incidents = to_int(row.get('incidents_count'))
+            critical = to_int(row.get('critical_incidents'))
+            satisfaction = to_float(row.get('user_satisfaction'))
+
+            summary += f"  {month}: "
+            summary += f"Uptime {uptime:.1f}%, "
+            summary += f"Response {response:.1f}h, "
+            summary += f"{incidents} incidents "
+            summary += f"({critical} critical), "
+            summary += f"Satisfaction {satisfaction:.1f}/5.0\n"
+
         return summary
     
     def summarize_incidents(self, incidents: Optional[List[Dict]]) -> str:

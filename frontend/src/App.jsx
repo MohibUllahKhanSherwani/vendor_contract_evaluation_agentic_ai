@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { RefreshCw, AlertCircle, Zap, Brain, TrendingUp, ShieldCheck, LogOut, User as UserIcon } from 'lucide-react';
+import { RefreshCw, AlertCircle, Zap, Brain, TrendingUp, ShieldCheck, LogOut, User as UserIcon, Database } from 'lucide-react';
 import ContractTable from './components/ContractTable';
 import StatsCard from './components/StatsCard';
 import PerformanceChart from './components/PerformanceChart';
@@ -7,7 +7,8 @@ import RiskHeatmap from './components/RiskHeatmap';
 import ReasoningChain from './components/ReasoningChain';
 import Auth from './components/Auth';
 import LandingPage from './components/LandingPage';
-import { fetchVendors, evaluateSample } from './services/api';
+import ConnectDataModal from './components/ConnectDataModal';
+import { fetchVendors, evaluateSample, updateDataSource } from './services/api';
 
 function App() {
     const [user, setUser] = useState(null);
@@ -19,6 +20,7 @@ function App() {
     const [selectedContract, setSelectedContract] = useState(null);
     const [showLanding, setShowLanding] = useState(true);
     const [authIsLogin, setAuthIsLogin] = useState(true);
+    const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
 
     const loadVendors = async () => {
         if (!user) return;
@@ -28,6 +30,7 @@ function App() {
             const data = await fetchVendors();
             setContracts(data);
             setLastUpdate(new Date());
+            setSelectedContract(null); // Clear selected on reload
         } catch (err) {
             setError(err.message);
             console.error('Error loading vendors:', err);
@@ -64,6 +67,15 @@ function App() {
             setError(`Analysis for ${contract.vendor_name} failed: ${err.message}`);
         } finally {
             setAnalyzingId(null);
+        }
+    };
+
+    const handleConnectData = async (sourceType, mongoUri, dbName) => {
+        try {
+            await updateDataSource(sourceType, mongoUri, dbName);
+            await loadVendors(); // Reload vendors from new source
+        } catch (err) {
+            throw err; // Passed back to modal to display
         }
     };
 
@@ -149,8 +161,14 @@ function App() {
                         <span className="text-white">Active Dashboard</span>
                     </div>
                     
-                    <div className="flex items-center gap-2">
-
+                    <div className="flex items-center gap-4">
+                        <button 
+                            onClick={() => setIsConfigModalOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-widest rounded-lg transition-all"
+                        >
+                            <Database className="w-3.5 h-3.5" />
+                            Connect Data
+                        </button>
                     </div>
                 </div>
 
@@ -276,6 +294,13 @@ function App() {
                     </footer>
                 </div>
             </main>
+
+            {/* Modals */}
+            <ConnectDataModal 
+                isOpen={isConfigModalOpen}
+                onClose={() => setIsConfigModalOpen(false)}
+                onConnect={handleConnectData}
+            />
         </div>
     );
 }

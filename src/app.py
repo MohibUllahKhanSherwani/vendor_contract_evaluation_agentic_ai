@@ -34,6 +34,31 @@ app.include_router(auth_router, prefix="/auth", tags=["Auth"])
 data_intake = DataIntakeAgent()
 evaluation_results: Dict[str, dict] = {}
 
+class DataConfigRequest(BaseModel):
+    source_type: str
+    mongo_uri: str
+    db_name: str
+
+@app.post("/config/data-source", status_code=status.HTTP_200_OK)
+async def update_data_source(request: DataConfigRequest):
+    try:
+        from src.configurations.configuration_manager import ConfigurationManager
+        config_manager = ConfigurationManager()
+        config_manager.update_data_config(
+            request.source_type, 
+            request.mongo_uri, 
+            request.db_name
+        )
+        
+        evaluation_results.clear()
+        
+        return {"status": "success", "message": "Data source configuration updated."}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
 SAMPLE_VENDORS = {
     "vendor_abc_it_solutions": {"file": "data/samples/vendor_abc_it_solutions.json"},
     "vendor_gulf_pipeline": {"file": "data/samples/vendor_gulf_pipeline.json"},
@@ -119,23 +144,22 @@ async def evaluate_contract(request: EvaluationRequest):
 
 @app.get("/vendors")
 def list_vendors():
+    from src.data_sources.factory import get_data_source
+    data_source = get_data_source()
+    all_contracts = data_source.list_contracts()
+    
     vendors = []
-    root_path = Path(__file__).parent.parent
-    for sample_key, sample_info in SAMPLE_VENDORS.items():
-        file_path = root_path / sample_info["file"]
-        if file_path.exists():
-            with open(file_path, 'r', encoding='utf-8') as f:
-                contract = json.load(f)
-            contract_id = contract.get("contract_id", "")
-            if contract_id in evaluation_results:
-                vendors.append(evaluation_results[contract_id])
-            else:
-                vendors.append({
-                    "contract_id": contract_id,
-                    "vendor_name": contract.get("vendor_name", "Unknown"),
-                    "status": "pending",
-                    "sample_key": sample_key
-                })
+    for contract in all_contracts:
+        contract_id = contract.get("contract_id", "")
+        if contract_id in evaluation_results:
+            vendors.append(evaluation_results[contract_id])
+        else:
+            vendors.append({
+                "contract_id": contract_id,
+                "vendor_name": contract.get("vendor_name", "Unknown"),
+                "status": "pending",
+                "sample_key": contract.get("sample_key", "unknown")
+            })
     return {"count": len(vendors), "vendors": vendors}
 
 @app.get("/results/{contract_id}")
@@ -158,44 +182,54 @@ def list_results():
 
 @app.post("/evaluate-sample/{sample_name}")
 async def evaluate_sample(sample_name: str):
-    shorthands = {
-        "abc": "vendor_abc_it_solutions",
-        "xyz": "vendor_xyz_tech",
-        "problematic": "vendor_problematic_corp",
-        "drilling": "vendor_desert_drilling",
-        "pipeline": "vendor_gulf_pipeline",
-        "chemicals": "vendor_sahara_oilfield",
-        "logistics": "vendor_petro_logistics",
-        "hse": "vendor_apex_hse"
-    }
-    
-    sample_key = sample_name.lower()
-    if sample_key in shorthands:
-        sample_key = shorthands[sample_key]
-        
-    sample_info = SAMPLE_VENDORS.get(sample_key)
-    if not sample_info:
-        available = list(SAMPLE_VENDORS.keys()) + list(shorthands.keys())
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Unknown sample: {sample_name}. Available: {', '.join(available)}"
-        )
+    from src.data_sources.factory import get_data_source
+    data_source = get_data_source()
+    all_contracts = data_source.list_contracts()
 
-    contract_file = sample_info["file"]
-    contract_file_path = Path(contract_file)
-    if not contract_file_path.exists():
-        root_path = Path(__file__).parent.parent
-        contract_file_path = root_path / contract_file
+    # 1. Try to find in the dynamic contracts (e.g., MongoDB or Local registry)
+    contract = next((c for c in all_contracts if c.get("sample_key") == sample_name), None)
+    
+    # 2. Fallback to hardcoded shorthands and local files if not found
+    if not contract:
+        shorthands = {
+            "abc": "vendor_abc_it_solutions",
+            "xyz": "vendor_xyz_tech",
+            "problematic": "vendor_problematic_corp",
+            "drilling": "vendor_desert_drilling",
+            "pipeline": "vendor_gulf_pipeline",
+            "chemicals": "vendor_sahara_oilfield",
+            "logistics": "vendor_petro_logistics",
+            "hse": "vendor_apex_hse"
+        }
         
-    if not contract_file_path.exists():
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Contract file not found: {contract_file_path}"
-        )
+        sample_key = sample_name.lower()
+        if sample_key in shorthands:
+            sample_key = shorthands[sample_key]
+            
+        sample_info = SAMPLE_VENDORS.get(sample_key)
+        if not sample_info:
+            available = [c.get("sample_key") for c in all_contracts if c.get("sample_key")] + list(SAMPLE_VENDORS.keys()) + list(shorthands.keys())
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Unknown sample: {sample_name}. Available: {', '.join(available)}"
+            )
+
+        contract_file = sample_info["file"]
+        contract_file_path = Path(contract_file)
+        if not contract_file_path.exists():
+            root_path = Path(__file__).parent.parent
+            contract_file_path = root_path / contract_file
+            
+        if not contract_file_path.exists():
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Contract file not found: {contract_file_path}"
+            )
+        
+        with open(contract_file_path, 'r', encoding='utf-8') as f:
+            contract = json.load(f)
     
-    with open(contract_file_path, 'r', encoding='utf-8') as f:
-        contract = json.load(f)
-    
+    # Run the evaluation with whatever contract data we found
     request = EvaluationRequest(
         contract_id=contract["contract_id"],
         contract_data=contract

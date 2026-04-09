@@ -30,3 +30,25 @@ class ConfigurationManager:
 
     def load_session_config(self) -> RootConfigs.SessionConfig:
         return RootConfigs.SessionConfig(**self.config["SessionConfig"])
+
+    def load_data_config(self) -> RootConfigs.DataConfig:
+        data_section = self.config.get("DataConfig", {})
+        return RootConfigs.DataConfig(**data_section)
+
+    def update_data_config(self, source_type: str, mongo_uri: str, db_name: str):
+        """Updates the data configuration and saves it back to the config object."""
+        self.config["DataConfig"] = {
+            "source_type": source_type,
+            "mongo_uri": mongo_uri,
+            "db_name": db_name
+        }
+        
+        # Write back to config.yaml so other instances pick it up
+        import yaml
+        with open(self.config_file_path, 'r', encoding='utf-8') as f:
+            full_config = yaml.safe_load(f) or {}
+            
+        full_config["DataConfig"] = self.config["DataConfig"]
+        
+        with open(self.config_file_path, 'w', encoding='utf-8') as f:
+            yaml.dump(full_config, f, default_flow_style=False, sort_keys=False)

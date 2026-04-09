@@ -5,7 +5,7 @@
 > This platform was designed and prepared for an **Omani Energy Sector client** during my tenure at **Kalsoft**. It incorporates specific strategic requirements and compliance considerations for the Gulf region.
 
 [![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)]()
+[![Python](https://img.shields.io/badge/Python-3.11--3.12-blue.svg)]()
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688.svg)]()
 [![Google ADK](https://img.shields.io/badge/ADK-Google_Agent_Kit-4285F4.svg)]()
 [![React](https://img.shields.io/badge/Frontend-React_Vite-61DAFB.svg)]()
@@ -110,6 +110,8 @@ GOOGLE_API_KEY_n= nth API key
 ```
 
 ### 2. Backend Setup
+Use Python 3.11 or 3.12 for the smoothest dependency installation on Windows.
+
 ```powershell
 python -m venv venv
 .\venv\Scripts\Activate.ps1
