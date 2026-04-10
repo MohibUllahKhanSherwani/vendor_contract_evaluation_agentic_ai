@@ -72,77 +72,6 @@ async def ensure_session(user_id: str, session_id: str, session_service, app_nam
     return session
 
 
-# ─── CSV Output Handler ──────────────────────────────────────────────────────
-
-class CSVOutputHandler:
-
-    def __init__(self, csv_path: str = "data/evaluations.csv"):
-        self.csv_path = Path(csv_path)
-        self.fieldnames = [
-            "timestamp",
-            "contract_id",
-            "vendor_name",
-            "performance_score",
-            "grade",
-            "risk_level",
-            "recommendation",
-            "status",
-            "justification",
-            "confidence_level"
-        ]
-        self.csv_path.parent.mkdir(parents=True, exist_ok=True)
-
-    def save_result(self, result: Dict) -> None:
-        results = self.read_results()
-        contract_id = result.get("contract_id", "")
-
-        row = {
-            "timestamp": result.get("timestamp", datetime.utcnow().isoformat() + "Z"),
-            "contract_id": contract_id,
-            "vendor_name": result.get("vendor_name", ""),
-            "performance_score": result.get("performance_score", 0),
-            "grade": result.get("grade", ""),
-            "risk_level": result.get("risk_level", ""),
-            "recommendation": result.get("recommendation", ""),
-            "status": result.get("status", ""),
-            "justification": result.get("justification", ""),
-            "confidence_level": result.get("confidence_level", "")
-        }
-
-        updated = False
-        for i, existing in enumerate(results):
-            if existing.get("contract_id") == contract_id:
-                results[i] = row
-                updated = True
-                break
-
-        if not updated:
-            results.append(row)
-
-        with open(self.csv_path, 'w', newline='', encoding='utf-8') as f:
-            writer = csv.DictWriter(f, fieldnames=self.fieldnames)
-            writer.writeheader()
-            writer.writerows(results)
-
-    def read_results(self) -> list:
-        if not self.csv_path.exists():
-            return []
-
-        results = []
-        with open(self.csv_path, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                results.append(dict(row))
-
-        return results
-
-    def get_by_contract_id(self, contract_id: str) -> Dict:
-        results = self.read_results()
-        for result in results:
-            if result.get("contract_id") == contract_id:
-                return result
-        return None
-
 # ─── Auth Helpers ────────────────────────────────────────────────────────────
 
 def hash_password(password: str) -> str:
@@ -152,3 +81,12 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a plain password against a hashed one using argon2."""
     return pwd_context.verify(plain_password, hashed_password)
+
+def format_error_message(e: Exception) -> str:
+    """Format an exception into a user-friendly error message."""
+    error_str = str(e)
+    if "429" in error_str or "quota" in error_str.lower():
+        return "Model quota exceeded. Please try again later or contact support."
+    if "auth" in error_str.lower() or "api key" in error_str.lower():
+        return "Authentication error with the AI provider. Please check configuration."
+    return f"An unexpected error occurred: {error_str}"
