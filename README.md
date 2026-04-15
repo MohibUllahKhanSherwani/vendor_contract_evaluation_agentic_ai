@@ -29,19 +29,16 @@ The system utilizes a modular, multi-agent architecture powered by the **Google 
 ```mermaid
 graph TD
     subgraph Access_Layer [Security & Access]
-        UA[User Auth / JWT] -->|Auth| LD[Landing Dashboard]
-        LD -->|Configure| CD[Connect Data Modal]
+        UA[User Auth] -->|Auth| LD[Landing Dashboard]
+        LD -->|Config| CD[Connect Data Modal]
     end
 
-    subgraph Data_Layer [Ingestion Layer]
-        CD -->|Query| MDB[(MongoDB Atlas)]
-        CD -->|Load| LFS[Local Samples]
+    subgraph Data_Layer [Data Ingestion]
+        MDB[MongoDB Atlas] -->|Load| R[ADK Runner]
+        LFS[Local Samples] -->|Load| R
     end
 
     subgraph ADK_Core [Google ADK Core]
-        MDB -->|Ctx| R[ADK Runner]
-        LFS -->|Ctx| R
-        
         subgraph Agent_Swarm [Agentic Swarm]
             A1[Performance Agent]
             A2[Risk Agent]
@@ -53,7 +50,7 @@ graph TD
         R --> A3 --> R
     end
 
-    subgraph Decision_Engine [Logic & Output]
+    subgraph Verdict_Engine [Logic & Output]
         R -->|Synthesis| D[Deterministic Rules]
         D -->|Verdict| UI[Executive Dashboard]
     end
@@ -61,7 +58,7 @@ graph TD
     style Access_Layer fill:#f5f5f5,stroke:#333
     style Data_Layer fill:#f9f9f9,stroke:#333
     style ADK_Core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style Decision_Engine fill:#fff3e0,stroke:#ff6f00
+    style Verdict_Engine fill:#fff3e0,stroke:#e65100
 ```
 
 ---
