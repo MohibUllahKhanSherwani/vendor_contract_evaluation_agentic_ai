@@ -1,57 +1,46 @@
-# Agentic AI Contracts Specialist: Intelligence Hub 🚀
+# 🛡️ Contract Intelligence Hub: Enterprise Agentic AI
 
-> [!IMPORTANT]
-> **🏢 Professional Context**
-> This platform was designed and prepared for an **Omani Energy Sector client** during my tenure at **Kalsoft**. It incorporates specific strategic requirements and compliance considerations for the Gulf region.
+> **🏢 Strategic Enterprise Context**
+> Developed for the **Omani Energy Sector** to transform vendor contract lifecycle management. This platform moves beyond static reporting into **Autonomous Cognitive Auditing**, ensuring peak performance and risk-mitigated decision-making in high-stakes environments.
 
-[![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
-[![Python](https://img.shields.io/badge/Python-3.11--3.12-blue.svg)]()
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-009688.svg)]()
-[![Google ADK](https://img.shields.io/badge/ADK-Google_Agent_Kit-4285F4.svg)]()
-[![React](https://img.shields.io/badge/Frontend-React_Vite-61DAFB.svg)]()
-
-An advanced **Agentic AI** platform designed using the **Google Agent Development Kit (ADK)** to automate and deepen contract performance evaluation. Moving beyond simple data visualization, this system functions as an **Autonomous Contracts Agent**, utilizing a multi-agent swarm to reason through complex data for executive-level, audit-ready recommendations.
+[![Status](https://img.shields.io/badge/Status-Production--Ready-success.svg)]()
+[![Python](https://img.shields.io/badge/Python-3.11--3.12-3776AB.svg?logo=python&logoColor=white)]()
+[![Google ADK](https://img.shields.io/badge/Orchestration-Google_ADK-4285F4.svg?logo=google&logoColor=white)]()
+[![Gemini 2.5](https://img.shields.io/badge/Intelligence-Gemini_2.5_Flash-8E75B2.svg?logo=google-gemini&logoColor=white)]()
+[![Database](https://img.shields.io/badge/Persistence-MongoDB--Atlas-47A248.svg?logo=mongodb&logoColor=white)]()
+[![React](https://img.shields.io/badge/Frontend-React_Vite-61DAFB.svg?logo=react&logoColor=white)]()
 
 ---
 
-## ⚡ The Problem: The High Cost of Manual Audits
-In the energy sector, **vendor contract evaluation** is a massive bottleneck. Traditional reviews are:
--   **Time-Intensive**: Manual cross-referencing of hundreds of SLAs and incidents.
--   **Siloed**: Data is scattered across disjointed formats (.csv, .json, .md, .xlsx).
--   **Subjective**: Lacks a consistent, data-driven reasoning trail for high-stakes decisions.
+## 🌌 The Vision: Beyond Traditional Audits
 
-**The Solution**: A multi-agent "intelligence hub" that ingests data from **4 heterogeneous sources** to deliver autonomous, audit-ready verdicts in seconds.
+In the complex landscape of energy and petrochemicals, manual contract auditing is a trillion-dollar bottleneck. This **Agentic AI Intelligence Hub** solves three critical failures of traditional VCM (Vendor Contract Management):
 
----
-
-### 📊 Dashboard Overview
-<p align="center">
-  <img width="1340" height="847" alt="Executive Dashboard" src="https://github.com/user-attachments/assets/c942389c-54ae-45e6-aeeb-874cf7ea3249" />
-</p>
-
-### 🧠 AI Decision & Reasoning
-<p align="center">
-  <img width="1587" height="774" alt="AI-Decision and Thinking" src="https://github.com/user-attachments/assets/96f6ebe6-28c0-40a3-8d65-a8252e0f6cf4" />
-</p>
+1.  **Fragmentation**: Unified ingestion from `.csv`, `.json`, `.md`, `.xlsx`, and **Live MongoDB Clusters**.
+2.  **Cognitive Load**: Autonomous multi-agent reasoning replaces manual cross-referencing of SLAs and historic incidents.
+3.  **Transparency Gap**: Every verdict includes a high-fidelity **Reasoning Chain**, detailing the "Logic Pathway" used by the AI swarm to arrive at a recommendation.
 
 ---
 
-## 🏗️ System Architecture (Google ADK Core)
+## 🏗️ Technical Architecture (Agentic Swarm)
 
-The system leverages the **Google ADK** for sophisticated agent orchestration, stateful session management, and robust multi-agent coordination.
+The system utilizes a modular, multi-agent architecture powered by the **Google Agent Development Kit (ADK)** for stateful, secure, and explainable execution.
 
 ```mermaid
 graph TD
-    subgraph Data_Layer [Data Ingestion]
-        P_Data[Perf .csv] -->|Load| E[Executor]
-        I_Data[Incidents .json] -->|Load| E
-        R_Data[Reviews .md] -->|Load| E
-        F_Data[Financials .xlsx] -->|Load| E
+    subgraph Access_Layer [Security & Access]
+        UA[User Auth / JWT] -->|Auth| LD[Landing Dashboard]
+        LD -->|Configure| CD[Connect Data Modal]
+    end
+
+    subgraph Data_Layer [Ingestion Layer]
+        CD -->|Query| MDB[(MongoDB Atlas)]
+        CD -->|Load| LFS[Local Samples]
     end
 
     subgraph ADK_Core [Google ADK Core]
-        E -->|Init| R[ADK Runner]
-        R -->|State| S[DatabaseSessionService]
+        MDB -->|Ctx| R[ADK Runner]
+        LFS -->|Ctx| R
         
         subgraph Agent_Swarm [Agentic Swarm]
             A1[Performance Agent]
@@ -69,6 +58,7 @@ graph TD
         D -->|Verdict| UI[Executive Dashboard]
     end
 
+    style Access_Layer fill:#f5f5f5,stroke:#333
     style Data_Layer fill:#f9f9f9,stroke:#333
     style ADK_Core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     style Decision_Engine fill:#fff3e0,stroke:#ff6f00
@@ -76,50 +66,72 @@ graph TD
 
 ---
 
-## 🌟 Key Features
+## 🌟 Core Innovations
 
-*   **Google ADK Orchestration**: Uses the `Runner` and `LlmAgent` patterns for enterprise-grade AI execution.
-*   **Multi-Agent Swarm**: Specialized agents for Performance Analysis, Risk Assessment, and Final Strategic Reasoning.
-*   **Explainable AI (XAI)**: A transparent 5-step **Logic Pathway** revealing the Agent's specific reasoning process and evidence citations.
-*   **Deterministic Guardrails**: Guarantees decision consistency through a Python-based rule engine (RENEW, MONITOR, RENEGOTIATE, TERMINATE).
-*   **API Key Rotation**: Automated failover between multiple keys (`GOOGLE_API_KEY_1`, `_2`) to bypass rate-limits.
-*   **Data Residency Compliance**: Strategy for **Oman PDPL** alignment using Azure/Google regional datacenters.
+### 🧠 Federated Multi-Agent Reasoning
+Unlike simple chatbots, this system deploys specialized agents:
+*   **Performance Analysis Agent**: Calculates KPI trends and historical SLA compliance.
+*   **Risk Assessment Agent**: Scrutinizes HSE incidents, financial exposure, and geopolitical factors.
+*   **Reasoning Agent**: A "C-Suite" agent that synthesizes reports from the swarm into an audit-ready verdict.
+
+### 🔗 Dynamic "Connect-Your-Source"
+The **Data Connectivity Modal** allows executives to plug into any MongoDB cluster in real-time, instantly transforming raw database records into strategic intelligence.
+
+### 🔐 Enterprise Governance & Auth
+Integrated **Argon2-hashed authentication** and JWT-based session management ensure that sensitive contract data is only accessible to authorized personnel.
+
+### ⚡ Seamless Key Rotation
+Production-hardened failover logic rotates through up to **6 Google API keys** automatically, bypassing the `429 Too Many Requests` quota limits during heavy-load audits.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Unified Tech Stack
 
-| Component | Technology | Description |
+| Layer | Technology | Role |
 | :--- | :--- | :--- |
-| **Orchestration** | **Google ADK** | Core framework for agent management. |
-| **Intelligence** | **Gemini 2.5 Flash** | Primary reasoning engine for high-speed audits. |
-| **Backend** | **FastAPI** | High-performance async API Layer. |
-| **Frontend** | **React (Vite)** | Modern, high-contrast C-Level dashboard. |
-| **Database** | **SQLite + AioSqlite** | ADK-managed session history. |
+| **Orchestration** | **Google ADK** | Core framework for stateful agent sessions. |
+| **Intelligence** | **Gemini 2.5 Flash Lite** | High-speed, high-context reasoning engine. |
+| **Database** | **MongoDB Atlas** | Primary data source for vendor records. |
+| **History** | **SQLite + AioSqlite** | Local session memory for the ADK Runner. |
+| **Backend** | **FastAPI** | High-performance asynchronous API layer. |
+| **Frontend** | **React 18 + Vite** | Premium, high-contrast dashboard with data-viz. |
+| **Auth** | **Argon2 + JWT** | Zero-trust security implementation. |
 
 ---
 
-## 🏁 Getting Started
+## 🚀 Deployment Guide
 
-### 1. Configuration (.env)
-This system supports **retry logic**, so you can add as many API keys as you want using the below naming convention, also edit the config.yaml file to list the API keys there
+### 1. Environment Configuration
+Create a `.env` file in the root. The system supports automated key rotation:
 ```env
-GOOGLE_API_KEY=your_first_key
-GOOGLE_API_KEY_2=your_second_key
-GOOGLE_API_KEY_n= nth API key
+# Core API Keys
+GOOGLE_API_KEY=primary_key
+GOOGLE_API_KEY_2=backup_key_1
+GOOGLE_API_KEY_3=backup_key_2
+
+# Database Connectivity
+MONGO_URI=mongodb+srv://...
+DB_NAME=contract_hub
+
+# Security
+JWT_SECRET=your_super_secret_key
 ```
 
-### 2. Backend Setup
-Use Python 3.11 or 3.12 for the smoothest dependency installation on Windows.
-
+### 2. Backend Initialization
+Requires **Python 3.11+**.
 ```powershell
+# Setup Workspace
 python -m venv venv
 .\venv\Scripts\Activate.ps1
+
+# Install Dependencies
 pip install -r requirements.txt
+
+# Launch API
 python src/app.py
 ```
 
-### 3. Frontend Setup
+### 3. Frontend Initialization
 ```powershell
 cd frontend
 npm install
@@ -128,16 +140,26 @@ npm run dev
 
 ---
 
-## ⚙️ Logic Framework (Decision Boundaries)
-
-| Condition | Recommendation | Description |
-| :--- | :--- | :--- |
-| **Score >= 85 & Risk <= MED** | **RENEW** | Strong performer with manageable risk. |
-| **Score 70-84 & Risk == MED** | **MONITOR** | Decent performance but requires oversight. |
-| **Score < 50 or High Risk/Low Score**| **TERMINATE** | Systematic failure or critical risk exposure. |
-| **All Other Cases** | **RENEGOTIATE** | Performance/terms need formal correction. |
+## ⚖️ Compliance & Data Sovereignty
+Designed with the **Omani Personal Data Protection Law (PDPL)** in mind.
+*   **Regional Deployment**: Optimized for Azure UAE North or local Omani DC.
+*   **Audit Trail**: Every decision is stored with a unique `session_id` and the exact `reasoning_chain` used for that specific moment in time.
 
 ---
 
-## ⚖️ Compliance & Governance
-Designed for the **Omani Energy Sector**, the platform supports strict data handling protocols. Future implementations are geared toward local hosting or **Azure UAE North** to satisfy Oman's **Personal Data Protection Law (PDPL)** regarding data sovereignty.
+## ⚙️ Governance Logic Framework
+
+The system utilizes a deterministic rule engine to validate agent recommendations:
+
+| Score | Risk | Command | Recommendation |
+| :--- | :--- | :--- | :--- |
+| ≥ 85 | LOW/MED | **RENEW** | Strategic Vendor - Proceed with renewal. |
+| 70 - 84 | MED | **MONITOR** | Decent performance - Bi-weekly audits required. |
+| < 70 | HIGH | **RENEGOTIATE** | Term correction or penalty application needed. |
+| < 50 | CRITICAL | **TERMINATE** | Systematic failure - Trigger exit strategy. |
+
+---
+
+<p align="center">
+  <i>Empowering Energy Leaders with Autonomous Intelligence.</i>
+</p>
